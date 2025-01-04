@@ -1,4 +1,5 @@
 # Give a Hand
+![Untitled design](https://github.com/user-attachments/assets/06956631-0594-4b94-b5b2-6b10aadd9f96)
 
 ## Team Members:
 | Roll Number  | Name          | Email                     | Role               |
