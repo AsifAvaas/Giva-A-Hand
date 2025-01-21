@@ -24,7 +24,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/register', formData);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_PORT}/api/register`, formData);
             console.log(response);
             if (response.status == 201) {
                 console.log('User registered successfully');

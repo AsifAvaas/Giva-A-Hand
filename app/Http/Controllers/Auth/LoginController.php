@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Hash;
 use App\Models\User;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class LoginController extends Controller
 {
@@ -28,5 +29,28 @@ class LoginController extends Controller
             'message' => 'Login successful',
             'token' => $token,
         ], 200);
+    }
+
+    public function logout(Request $request)
+    {
+        $token = $request->bearerToken();
+        if (!$token) {
+            return response()->json([
+                'message' => 'Token not provided'
+            ], 401);
+        }
+
+        $accessToken = PersonalAccessToken::findToken($token);
+        if (!$accessToken) {
+            return response()->json([
+                'message' => 'Invalid token'
+            ], 401);
+        }
+        $accessToken->delete();
+
+        return response()->json([
+            'message' => 'Logged out successfully'
+        ], 200);
+
     }
 }
