@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TestController;
 
@@ -13,4 +14,5 @@ use App\Http\Controllers\TestController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post("/register", [RegisterController::class, "Register"]);
+Route::post("/register", [RegisterController::class, "register"]);
+Route::post("/login", [LoginController::class, "login"]);
