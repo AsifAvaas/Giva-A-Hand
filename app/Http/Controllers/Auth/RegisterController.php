@@ -5,28 +5,48 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Hash;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+
 class RegisterController extends Controller
 {
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
-        ]);
+        try {
+            // Validate the request data
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|email|unique:users,email',
+                'password' => 'required|string|min:8|confirmed',
+            ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
+            // Create the user
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+            ]);
 
-        $token = $user->createToken('authToken')->plainTextToken;
+            // Generate the token
+            $token = $user->createToken('authToken')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Registration successful',
-            'token' => $token,
-        ], 201);
+            // Return success response
+            return response()->json([
+                'message' => 'Registration successful',
+                'token' => $token,
+            ], 201);
+        } catch (ValidationException $e) {
+            // Return a 400 Bad Request with validation errors
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors(),
+            ], 400);
+        } catch (\Exception $e) {
+            // Catch all other exceptions and return a 500 status
+            return response()->json([
+                'message' => 'Something went wrong',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
