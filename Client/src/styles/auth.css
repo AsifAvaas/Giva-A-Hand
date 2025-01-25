@@ -1,0 +1,136 @@
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+  background: url('../assets/login.jpg') no-repeat center center/cover;
+  position: relative;
+}
+
+.bg-gray-100::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.p-8 {
+  padding: 2rem;
+}
+
+.space-y-6 {
+  margin-top: 1.5rem;
+}
+
+.bg-white {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+}
+
+.rounded {
+  border-radius: 1rem;
+}
+
+.shadow-md {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.space-y-4 > * + * {
+  margin-top: 1rem;
+}
+
+.block {
+  display: block;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.text-gray-700 {
+  color: #374151;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.focus\:outline-none:focus {
+  outline: none;
+}
+
+.focus\:ring:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.focus\:border-blue-300:focus {
+  border-color: #93c5fd;
+}
+
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-green-500 {
+  color: #10b981;
+}
+
+.bg-blue-500 {
+  background-color: #f59e0b;
+}
+
+.hover\:bg-blue-700:hover {
+  background-color: #ea580c;
+  transform: translateY(-2px);
+  transition: all 0.3s ease;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.focus\:ring-2:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.focus\:ring-blue-400:focus {
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.5);
+}
