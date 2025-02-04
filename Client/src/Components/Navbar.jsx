@@ -9,26 +9,28 @@ function Navbar() {
 
     const handleLogout = async () => {
         try {
-            const response = await axios.post(
-                `${import.meta.env.VITE_BACKEND_PORT}/api/logout`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.status === 200) {
-                localStorage.clear();
-                window.location.href = '/login'; 
-            } else {
-                console.error('Failed to logout. Please try again.');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                console.warn("No token found. Redirecting to login.");
+                window.location.href = '/login';
+                return;
             }
+    
+            await axios.post('http://localhost:8000/api/logout', {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    
+            localStorage.clear();
+            window.location.href = '/login';
         } catch (error) {
-            console.error('Logout error:', error);
+            console.error("Logout failed:", error);
+            localStorage.clear();
+            window.location.href = '/login';
         }
     };
+    
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -41,7 +43,7 @@ function Navbar() {
                     Give A Hand
                 </Link>
 
-                {/* Menu toggle button for mobile view */}
+                
                 <button
                     className="menu-toggle"
                     onClick={toggleMenu}
