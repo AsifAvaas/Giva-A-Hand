@@ -3,33 +3,55 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+use App\Models\BloodDonors;
+use App\Models\Recievers;
+use App\Models\VolunteerInfo;
 use Illuminate\Http\Request;
 use Hash;
-use App\Models\User;
+
 use Laravel\Sanctum\PersonalAccessToken;
 
 class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+        $email = $request->input("email");
+        $password = $request->input("password");
+        $role = $request->input("role");
 
-        $user = User::where('email', $validated['email'])->first();
-
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+        if ($role === "admins") {
+            $user = Admin::where("email", $email)->first();
+        } else if ($role === "blood_donors") {
+            $user = BloodDonors::where("email", $email)->first();
+        } else if ($role === "recievers") {
+            $user = Recievers::where("email", $email)->first();
+        } else if ($role === "volunteer_infos") {
+            $user = VolunteerInfo::where("email", $email)->first();
+        } else {
+            return response()->json([
+                "success" => false,
+                "message" => "User not found"
+            ], 401);
         }
 
+        if (!Hash::check($password, $user->password)) {
+            return response()->json([
+                "success" => false,
+                "message" => "Invalid Password"
+            ], 401);
+        }
+
+        // Generate the API token
         $token = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
+            'success' => true,
             'message' => 'Login successful',
             'token' => $token,
         ], 200);
     }
+
 
     public function logout(Request $request)
     {
