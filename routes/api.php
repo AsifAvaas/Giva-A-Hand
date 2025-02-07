@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,8 @@ use App\Http\Controllers\UserController;
 |
 */
 Route::post("/register", [RegisterController::class, "register"]);
-Route::post("/login", [LoginController::class, "login"]);
+// Route::post("/login", [LoginController::class, "login"]);
+Route::middleware([EnsureFrontendRequestsAreStateful::class])->post('/login', [LoginController::class, 'login']);
 Route::post("/logout", [LoginController::class, "logout"]);
 
 
