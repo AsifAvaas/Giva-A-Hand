@@ -8,6 +8,7 @@ const Signup = () => {
         email: '',
         password: '',
         password_confirmation: '',
+        role: '',
     });
 
     const handleChange = (e) => {
@@ -23,6 +24,10 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData.password !== formData.password_confirmation) {
+            setError('Passwords do not match');
+            return;
+        }
         try {
             const response = await axios.post('http://localhost:8000/api/register', formData);
             console.log(response);
@@ -33,6 +38,7 @@ const Signup = () => {
             } else {
                 setError('Invalid credentials');
             }
+            // console.log('Form data:', formData);
         } catch (error) {
             setError('Invalid credentials');
             console.error(error);
@@ -77,10 +83,28 @@ const Signup = () => {
                             required
                         />
                     </div>
+                    <div>
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                            Role
+                        </label>
+                        <select name="role" id="role" value={formData.role} onChange={handleChange} className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200" required>
+                            <option value="">Select a role</option>
+                            <option value="admins">Admin</option>
+                            <option value="volunteer_infos">Volunteer</option>
+                            <option value="blood_donors">Blood Donor</option>
+                            <option value="recievers">Receiver</option>
+                        </select>
+                    </div>
                     {error && <div className="text-red-500">{error}</div>}
                     <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-200">
                         Sign Up
                     </button>
+                    <p className="text-sm text-center text-gray-600">
+                        Already have an account?{' '}
+                        <a href="/login" className="text-indigo-600 hover:underline">
+                            Log in
+                        </a>
+                    </p>
                 </form>
             </div>
         </div>

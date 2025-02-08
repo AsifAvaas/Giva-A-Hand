@@ -9,16 +9,10 @@ class BloodDonorController extends Controller
 {
     public function getProfile(Request $request)
     {
-        
-        $bloodDonorId = $request->input('blood_donor_id');
-        $role = $request->input('role');
 
-        
-        if ($role !== 'blood_donors') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
-        }
+        $bloodDonorId = $request->input('userId');
 
-        
+
         $bloodDonor = BloodDonors::find($bloodDonorId);
 
         if (!$bloodDonor) {
@@ -27,8 +21,8 @@ class BloodDonorController extends Controller
 
         return response()->json([
             'success' => true,
-            'blood_donor' => [
-                'id' => $bloodDonor->id,
+            'user' => [
+                'userId' => $bloodDonor->blood_donor_id,
                 'name' => $bloodDonor->name,
                 'email' => $bloodDonor->email,
                 'phone' => $bloodDonor->phone ?? null,
@@ -43,23 +37,18 @@ class BloodDonorController extends Controller
 
     public function updateProfile(Request $request)
     {
-       
-        $bloodDonorId = $request->input('blood_donor_id');
-        $role = $request->input('role');
 
-       
-        if ($role !== 'blood_donors') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
-        }
+        $bloodDonorId = $request->input('userId');
 
-    
+
+
         $bloodDonor = BloodDonors::find($bloodDonorId);
 
         if (!$bloodDonor) {
             return response()->json(['success' => false, 'message' => 'Blood donor not found'], 404);
         }
 
-       
+
         $request->validate([
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|unique:blood_donors,email,' . $bloodDonor->id,
@@ -73,7 +62,7 @@ class BloodDonorController extends Controller
             'approved' => 'nullable|boolean'
         ]);
 
-        
+
         $bloodDonor->update([
             'name' => $request->input('name', $bloodDonor->name),
             'email' => $request->input('email', $bloodDonor->email),
@@ -89,8 +78,8 @@ class BloodDonorController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'blood_donor' => [
-                'id' => $bloodDonor->id,
+            'user' => [
+                'userId' => $bloodDonor->blood_donor_id,
                 'name' => $bloodDonor->name,
                 'email' => $bloodDonor->email,
                 'phone' => $bloodDonor->phone ?? null,
@@ -99,7 +88,7 @@ class BloodDonorController extends Controller
                 'address' => $bloodDonor->address ?? null,
                 'profile_pic' => $bloodDonor->profile_pic ?? null,
                 'approved' => $bloodDonor->approved ?? null,
-                
+
             ]
         ], 200);
     }

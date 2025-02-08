@@ -19,15 +19,19 @@ class LoginController extends Controller
         $email = $request->input("email");
         $password = $request->input("password");
         $role = $request->input("role");
-
+        $id = "";
         if ($role === "admins") {
             $user = Admin::where("email", $email)->first();
+            $id = $user->admin_id;
         } else if ($role === "blood_donors") {
             $user = BloodDonors::where("email", $email)->first();
+            $id = $user->blood_donor_id;
         } else if ($role === "recievers") {
             $user = Recievers::where("email", $email)->first();
+            $id = $user->reciever_id;
         } else if ($role === "volunteer_infos") {
             $user = VolunteerInfo::where("email", $email)->first();
+            $id = $user->volunteer_id;
         } else {
             return response()->json([
                 "success" => false,
@@ -48,8 +52,10 @@ class LoginController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Login successful',
+            'userId' => $id,
             'token' => $token,
-        ], 200);
+            'role' => $role,
+        ], 201);
     }
 
 
