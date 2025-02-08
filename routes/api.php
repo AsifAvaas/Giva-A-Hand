@@ -2,8 +2,12 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BloodDonorController;
+use App\Http\Controllers\RecieverController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VolunteerInfoController;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 /*
@@ -24,4 +28,14 @@ Route::post("/logout", [LoginController::class, "logout"]);
 
 Route::get("/profileInfo", [UserController::class, "getUserInfo"]);
 
+Route::get('/admin/profile', [AdminController::class, 'getProfile']);
+Route::post('/admin/updateProfile', [AdminController::class, 'updateProfile']);
 
+Route::get('/blood-donor/profile', [BloodDonorController::class, 'getProfile']);
+Route::post('/blood-donor/updateProfile', [BloodDonorController::class, 'updateProfile']);
+
+Route::get('/reciever/profile', [RecieverController::class, 'getProfile']);
+Route::post('/reciever/updateProfile', [RecieverController::class, 'updateProfile']);
+
+Route::get('/volunteer/profile', [VolunteerInfoController::class, 'getProfile']);
+Route::post('/volunteer/updateProfile', [VolunteerInfoController::class, 'updateProfile']);
