@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
+
+
 use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -13,32 +17,40 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         try {
-            // Validate the request data
-            $validated = $request->validate([
+
+            $role = $request->input("role");
+            $name = $request->input("name");
+            $email = $request->input("email");
+            $password = $request->input("password");
+            $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8|confirmed',
+                'email' => "required|string|email|max:255|unique:$role",
+                'password' => 'required|string|min:8',
             ]);
 
-            // Create the user
-            $user = User::create([
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-                'password' => Hash::make($validated['password']),
-            ]);
+            if ($role === 'admins') {
+                Admin::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => Hash::make($password),
+                ]);
+                return response()->json(['success' => 'true', 'message' => 'Admin created successfully'], 201);
+            } else if ($role === 'users') {
+                User::create([
+                    'name' => $name,
+                    'email' => $email,
+                    'password' => Hash::make($password),
+                ]);
+                return response()->json(['success' => 'true', 'message' => 'User created successfully'], 201);
+            }
 
-            // Generate the token
-            $token = $user->createToken('authToken')->plainTextToken;
 
-            // Return success response
-            return response()->json([
-                'message' => 'Registration successful',
-                'token' => $token,
-            ], 201);
+            return response()->json(['success' => 'false', 'message' => 'Role not found'], 404);
         } catch (ValidationException $e) {
             // Return a 400 Bad Request with validation errors
             return response()->json([
-                'message' => 'Validation failed',
+                'success' => 'false',
+                'message' => 'Invalid Credentials',
                 'errors' => $e->errors(),
             ], 400);
         } catch (\Exception $e) {

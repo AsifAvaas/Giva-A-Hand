@@ -5,6 +5,7 @@ import '../../styles/auth.css';
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('');
     const [error, setError] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
@@ -12,21 +13,25 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_PORT}/api/login`, { email, password });
-            if (response.status === 200) {
+            const response = await axios.post('http://localhost:8000/api/login', { email, password, role: 'users' });
+            if (response.status === 201) {
                 setMsg('Login successful');
                 localStorage.setItem('token', response.data.token);
+                localStorage.setItem('userID', response.data.userId);
+                localStorage.setItem('role', response.data.role);
+
                 navigate('/');
             } else {
                 setError('Invalid credentials');
             }
+
+            console.log(role);
+            console.log('Email:', email);
+            console.log('Password:', password);
         } catch (error) {
             setError('Invalid credentials');
             console.error(error);
         }
-
-        console.log('Email:', email);
-        console.log('Password:', password);
     };
 
     return (
@@ -42,11 +47,18 @@ function Login() {
                         <label className="block text-sm font-medium text-gray-700">Password:</label>
                         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300" />
                     </div>
+
                     {error && <div className="text-red-500">{error}</div>}
                     {msg && <div className="text-green-500">{msg}</div>}
                     <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
                         Login
                     </button>
+                    <p className="text-sm text-center text-gray-600">
+                        Don't have an account?{' '}
+                        <a href="/signup" className="text-indigo-600 hover:underline">
+                            Sign Up
+                        </a>
+                    </p>
                 </form>
             </div>
         </div>
