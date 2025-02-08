@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\BloodDonors;
-use App\Models\Recievers;
-use App\Models\VolunteerInfo;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Hash;
 
@@ -23,15 +21,9 @@ class LoginController extends Controller
         if ($role === "admins") {
             $user = Admin::where("email", $email)->first();
             $id = $user->admin_id;
-        } else if ($role === "blood_donors") {
-            $user = BloodDonors::where("email", $email)->first();
-            $id = $user->blood_donor_id;
-        } else if ($role === "recievers") {
-            $user = Recievers::where("email", $email)->first();
-            $id = $user->reciever_id;
-        } else if ($role === "volunteer_infos") {
-            $user = VolunteerInfo::where("email", $email)->first();
-            $id = $user->volunteer_id;
+        } else if ($role === "users") {
+            $user = User::where("email", $email)->first();
+            $id = $user->user_id;
         } else {
             return response()->json([
                 "success" => false,

@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
-use App\Models\BloodDonors;
-use App\Models\Recievers;
 
-use App\Models\VolunteerInfo;
+
+use App\Models\User;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -35,27 +35,13 @@ class RegisterController extends Controller
                     'password' => Hash::make($password),
                 ]);
                 return response()->json(['success' => 'true', 'message' => 'Admin created successfully'], 201);
-            } else if ($role === 'blood_donors') {
-                BloodDonors::create([
+            } else if ($role === 'users') {
+                User::create([
                     'name' => $name,
                     'email' => $email,
                     'password' => Hash::make($password),
                 ]);
-                return response()->json(['success' => 'true', 'message' => 'Blood Donor created successfully'], 201);
-            } else if ($role === 'recievers') {
-                Recievers::create([
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => Hash::make($password),
-                ]);
-                return response()->json(['success' => 'true', 'message' => 'Reciever created successfully'], 201);
-            } else if ($role === 'volunteer_infos') {
-                VolunteerInfo::create([
-                    'name' => $name,
-                    'email' => $email,
-                    'password' => Hash::make($password),
-                ]);
-                return response()->json(['success' => 'true', 'message' => 'Volunteer created successfully'], 201);
+                return response()->json(['success' => 'true', 'message' => 'User created successfully'], 201);
             }
 
 
@@ -63,7 +49,8 @@ class RegisterController extends Controller
         } catch (ValidationException $e) {
             // Return a 400 Bad Request with validation errors
             return response()->json([
-                'message' => 'Validation failed',
+                'success' => 'false',
+                'message' => 'Invalid Credentials',
                 'errors' => $e->errors(),
             ], 400);
         } catch (\Exception $e) {

@@ -14,16 +14,10 @@ class CreateBloodDonorsTable extends Migration
     public function up()
     {
         Schema::create('blood_donors', function (Blueprint $table) {
-            $table->bigInteger('blood_donor_id')->unique();
-            $table->string('name')->nullable();
-            $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->id('blood_donor_id');
+            $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
             $table->enum('blood_group', ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'])->nullable();
             $table->date('last_donation')->nullable();
-            $table->text('address')->nullable();
-            $table->string('password');
-            $table->string('profile_pic')->nullable();
-            $table->boolean('approved')->default(false);
             $table->timestamps();
         });
     }

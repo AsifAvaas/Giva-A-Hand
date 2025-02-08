@@ -6,29 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
-class VolunteerInfo extends Model
+class Volunteer extends Model
 {
     use HasFactory, HasApiTokens;
-    protected $table = 'volunteer_infos';
-    protected $primaryKey = "volunteer_id"; // Define the primary key
-    public $incrementing = false; // Disable auto-increment
-    protected $keyType = "bigInteger"; // Ensure it's treated as an integer
 
+    protected $table = 'volunteers';
+    protected $primaryKey = "volunteer_id";
+    public $incrementing = false;
+    protected $keyType = "bigInteger";
     protected $fillable = [
         'volunteer_id',
-        'name',
-        'email',
-        'phone',
-        'address',
+        'user_id',
         'skills',
         'availability',
-        'password',
-        'profile_pic',
-        'approved',
     ];
-    protected $hidden = [
-        'password',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     protected static function boot()
     {

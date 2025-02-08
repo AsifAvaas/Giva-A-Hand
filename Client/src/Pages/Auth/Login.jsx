@@ -13,7 +13,7 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', { email, password, role });
+            const response = await axios.post('http://localhost:8000/api/login', { email, password, role: 'users' });
             if (response.status === 201) {
                 setMsg('Login successful');
                 localStorage.setItem('token', response.data.token);
@@ -47,18 +47,7 @@ function Login() {
                         <label className="block text-sm font-medium text-gray-700">Password:</label>
                         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300" />
                     </div>
-                    <div>
-                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                            Role
-                        </label>
-                        <select name="role" id="role" value={role} onChange={(e) => setRole(e.target.value)} className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200" required>
-                            <option value="">Select a role</option>
-                            <option value="admins">Admin</option>
-                            <option value="volunteer_infos">Volunteer</option>
-                            <option value="blood_donors">Blood Donor</option>
-                            <option value="recievers">Receiver</option>
-                        </select>
-                    </div>
+
                     {error && <div className="text-red-500">{error}</div>}
                     {msg && <div className="text-green-500">{msg}</div>}
                     <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
