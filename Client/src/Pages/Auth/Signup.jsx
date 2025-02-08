@@ -8,6 +8,7 @@ const Signup = () => {
         email: '',
         password: '',
         password_confirmation: '',
+        role: 'users',
     });
 
     const handleChange = (e) => {
@@ -23,16 +24,21 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (formData.password !== formData.password_confirmation) {
+            setError('Passwords do not match');
+            return;
+        }
         try {
             const response = await axios.post('http://localhost:8000/api/register', formData);
             console.log(response);
             if (response.status == 201) {
                 console.log('User registered successfully');
-                localStorage.setItem('token', response.data.token);
-                navigate('/');
+                // localStorage.setItem('token', response.data.token);
+                navigate('/login');
             } else {
                 setError('Invalid credentials');
             }
+            console.log('Form data:', formData);
         } catch (error) {
             setError('Invalid credentials');
             console.error(error);
@@ -77,10 +83,17 @@ const Signup = () => {
                             required
                         />
                     </div>
+
                     {error && <div className="text-red-500">{error}</div>}
                     <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-200">
                         Sign Up
                     </button>
+                    <p className="text-sm text-center text-gray-600">
+                        Already have an account?{' '}
+                        <a href="/login" className="text-indigo-600 hover:underline">
+                            Log in
+                        </a>
+                    </p>
                 </form>
             </div>
         </div>
