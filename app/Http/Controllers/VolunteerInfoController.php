@@ -9,16 +9,11 @@ class VolunteerInfoController extends Controller
 {
     public function getProfile(Request $request)
     {
-        
-        $volunteerId = $request->input('volunteer_id');
-        $role = $request->input('role');
 
-        
-        if ($role !== 'volunteer_infos') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
-        }
+        $volunteerId = $request->input('userId');
 
-        
+
+
         $volunteer = VolunteerInfo::find($volunteerId);
 
         if (!$volunteer) {
@@ -27,8 +22,8 @@ class VolunteerInfoController extends Controller
 
         return response()->json([
             'success' => true,
-            'volunteer' => [
-                'id' => $volunteer->id,
+            'user' => [
+                'userId' => $volunteer->volunteer_id,
                 'name' => $volunteer->name,
                 'email' => $volunteer->email,
                 'phone' => $volunteer->phone ?? null,
@@ -43,23 +38,18 @@ class VolunteerInfoController extends Controller
 
     public function updateProfile(Request $request)
     {
-        
-        $volunteerId = $request->input('volunteer_id');
-        $role = $request->input('role');
 
-        
-        if ($role !== 'volunteer_infos') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
-        }
+        $volunteerId = $request->input('userId');
 
-        
+
+
         $volunteer = VolunteerInfo::find($volunteerId);
 
         if (!$volunteer) {
             return response()->json(['success' => false, 'message' => 'Volunteer not found'], 404);
         }
 
-       
+
         $request->validate([
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|unique:volunteer_infos,email,' . $volunteer->id,
@@ -73,7 +63,7 @@ class VolunteerInfoController extends Controller
             'approved' => 'nullable|boolean'
         ]);
 
-        
+
         $volunteer->update([
             'name' => $request->input('name', $volunteer->name),
             'email' => $request->input('email', $volunteer->email),
@@ -89,8 +79,8 @@ class VolunteerInfoController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'volunteer' => [
-                'id' => $volunteer->id,
+            'user' => [
+                'userId' => $volunteer->volunteer_id,
                 'name' => $volunteer->name,
                 'email' => $volunteer->email,
                 'phone' => $volunteer->phone ?? null,
@@ -99,7 +89,7 @@ class VolunteerInfoController extends Controller
                 'availability' => $volunteer->availability ?? null,
                 'profile_pic' => $volunteer->profile_pic ?? null,
                 'approved' => $volunteer->approved ?? null,
-                
+
             ]
         ], 200);
     }

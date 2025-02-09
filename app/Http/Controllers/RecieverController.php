@@ -9,16 +9,14 @@ class RecieverController extends Controller
 {
     public function getProfile(Request $request)
     {
-        
-        $recieverId = $request->input('reciever_id');
-        $role = $request->input('role');
 
-        
-        if ($role !== 'recievers') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
-        }
+        $recieverId = $request->input('userId');
+        // $role = $request->input('role');
 
-        
+
+
+
+
         $reciever = Recievers::find($recieverId);
 
         if (!$reciever) {
@@ -27,8 +25,8 @@ class RecieverController extends Controller
 
         return response()->json([
             'success' => true,
-            'reciever' => [
-                'id' => $reciever->id,
+            'user' => [
+                'userId' => $reciever->reciever_id,
                 'name' => $reciever->name,
                 'email' => $reciever->email,
                 'phone' => $reciever->phone ?? null,
@@ -42,23 +40,16 @@ class RecieverController extends Controller
 
     public function updateProfile(Request $request)
     {
-        
-        $recieverId = $request->input('reciever_id');
-        $role = $request->input('role');
 
-        
-        if ($role !== 'recievers') {
-            return response()->json(['success' => false, 'message' => 'Unauthorized access'], 403);
-        }
+        $recieverId = $request->input('userId');
 
-        
         $reciever = Recievers::find($recieverId);
 
         if (!$reciever) {
             return response()->json(['success' => false, 'message' => 'Reciever not found'], 404);
         }
 
-        
+
         $request->validate([
             'name' => 'nullable|string|max:255',
             'email' => 'nullable|email|unique:recievers,email,' . $reciever->id,
@@ -71,7 +62,7 @@ class RecieverController extends Controller
             'approved' => 'nullable|boolean'
         ]);
 
-        
+
         $reciever->update([
             'name' => $request->input('name', $reciever->name),
             'email' => $request->input('email', $reciever->email),
@@ -86,8 +77,8 @@ class RecieverController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Profile updated successfully',
-            'reciever' => [
-                'id' => $reciever->id,
+            'user' => [
+                'userId' => $reciever->reciever_id,
                 'name' => $reciever->name,
                 'email' => $reciever->email,
                 'phone' => $reciever->phone ?? null,
@@ -95,7 +86,7 @@ class RecieverController extends Controller
                 'address' => $reciever->address ?? null,
                 'profile_pic' => $reciever->profile_pic ?? null,
                 'approved' => $reciever->approved ?? null,
-                
+
             ]
         ], 200);
     }

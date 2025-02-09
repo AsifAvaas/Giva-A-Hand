@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRecieversTable extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class CreateRecieversTable extends Migration
      */
     public function up()
     {
-        Schema::create('recievers', function (Blueprint $table) {
-            $table->bigInteger('reciever_id')->unique();
+        Schema::create('users', function (Blueprint $table) {
+            $table->id('user_id');
             $table->string('name')->nullable();
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
-            $table->string('reason')->nullable();
-            $table->text('address')->nullable();
             $table->string('password');
+            $table->string('phone')->nullable();
+            $table->text('address')->nullable();
             $table->string('profile_pic')->nullable();
+            $table->enum('role', ['doctor', 'blood_donor', 'volunteer', 'receiver'])->default('receiver');
             $table->boolean('approved')->default(false);
             $table->timestamps();
         });
@@ -34,6 +34,6 @@ class CreateRecieversTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('recievers');
+        Schema::dropIfExists('users');
     }
 }

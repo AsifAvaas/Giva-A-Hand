@@ -26,16 +26,17 @@ Route::middleware([EnsureFrontendRequestsAreStateful::class])->post('/login', [L
 Route::post("/logout", [LoginController::class, "logout"]);
 
 
-Route::get("/profileInfo", [UserController::class, "getUserInfo"]);
+Route::post("/profile", [UserController::class, "getProfile"]);
+Route::post("/updateProfile", [UserController::class, "updateProfile"]);
 
-Route::get('/admin/profile', [AdminController::class, 'getProfile']);
-Route::post('/admin/updateProfile', [AdminController::class, 'updateProfile']);
+Route::post('/admins/profile', [AdminController::class, 'getProfile']);
+Route::post('/admins/updateProfile', [AdminController::class, 'updateProfile']);
 
-Route::get('/blood-donor/profile', [BloodDonorController::class, 'getProfile']);
-Route::post('/blood-donor/updateProfile', [BloodDonorController::class, 'updateProfile']);
+// Route::post('/blood_donors/profile', [BloodDonorController::class, 'getProfile']);
+// Route::post('/blood_donors/updateProfile', [BloodDonorController::class, 'updateProfile']);
 
-Route::get('/reciever/profile', [RecieverController::class, 'getProfile']);
-Route::post('/reciever/updateProfile', [RecieverController::class, 'updateProfile']);
+// Route::post('/recievers/profile', [RecieverController::class, 'getProfile']);
+// Route::post('/recievers/updateProfile', [RecieverController::class, 'updateProfile']);
 
-Route::get('/volunteer/profile', [VolunteerInfoController::class, 'getProfile']);
-Route::post('/volunteer/updateProfile', [VolunteerInfoController::class, 'updateProfile']);
+// Route::post('/volunteer_infos/profile', [VolunteerInfoController::class, 'getProfile']);
+// Route::post('/volunteer_infos/updateProfile', [VolunteerInfoController::class, 'updateProfile']);
