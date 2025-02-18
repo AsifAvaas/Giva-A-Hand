@@ -4,7 +4,14 @@ import axios from 'axios';
 import VolunteerProfile from '../Components/VolunteerProfile';
 import BloodDonorProfile from '../Components/BloodDonorProfile';
 import DoctorProfile from '../Components/DoctorProfile';
+import '../styles/profile.css';
 
+const DefaultAvatar = () => (
+    <div className="default-avatar">
+      <i className="fas fa-user"></i>
+    </div>
+  );
+  
 function Profile() {
     const [profile, setProfile] = useState({});
     const [isEditing, setIsEditing] = useState(false);
@@ -81,13 +88,15 @@ function Profile() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen">
             <Navbar />
             <div className="container mx-auto p-4">
-                <div className="bg-white shadow-md mt-40 rounded-lg p-6">
-                    <h1 className="text-2xl font-bold mb-4">Profile</h1>
-                    {profile.profile_pic && <img src={profile.profile_pic} alt="Profile Picture" />}
-                    {isEditing && <input type="file" onChange={handleFileInput}></input>}
+                <div className="profile-container">
+                <div className="profile-image-wrapper">
+                {profile.profile_pic ? (<img src={profile.profile_pic} alt="Profile" className="profile-image" />
+                    ) : (<DefaultAvatar />)}
+                </div>
+                {isEditing && <input type="file" onChange={handleFileInput}></input>}
                     <div className="text-lg mb-2">
                         <span className="font-semibold">Name:</span>
                         {isEditing ? <input type="text" name="name" value={form.name || ''} onChange={handleChange} className="ml-2 p-2 border rounded" /> : <span> {profile.name}</span>}
@@ -118,7 +127,7 @@ function Profile() {
                             Your profile is not approved by the admin <span className="text-gray-700"> Please complete all the info</span>
                         </div>
                     )}
-
+ 
                     <div className="mt-4">
                         {isEditing ? (
                             <>
