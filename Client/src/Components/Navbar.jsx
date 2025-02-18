@@ -6,31 +6,35 @@ import '../styles/navbar.css';
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userID');
 
     const handleLogout = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                console.warn("No token found. Redirecting to login.");
+                console.warn('No token found. Redirecting to login.');
                 window.location.href = '/login';
                 return;
             }
-    
-            await axios.post('http://localhost:8000/api/logout', {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+
+            await axios.post(
+                'http://localhost:8000/api/logout',
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 },
-            });
-    
+            );
+
             localStorage.clear();
             window.location.href = '/login';
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.error('Logout failed:', error);
             localStorage.clear();
             window.location.href = '/login';
         }
     };
-    
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -43,25 +47,19 @@ function Navbar() {
                     Give A Hand
                 </Link>
 
-                
-                <button
-                    className="menu-toggle"
-                    onClick={toggleMenu}
-                    aria-label="Toggle navigation"
-                >
+                <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle navigation">
                     <i className={`fas ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
                 </button>
 
                 <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
                     {token ? (
                         <div className="nav-buttons">
-                            <Link to="/profile" className="nav-link">
-                                <i className="fas fa-user"></i> Profile
-                            </Link>
-                            <button
-                                className="nav-button logout-btn"
-                                onClick={handleLogout}
-                            >
+                            {userId && (
+                                <Link to="/profile" className="nav-link">
+                                    <i className="fas fa-user"></i> Profile
+                                </Link>
+                            )}
+                            <button className="nav-button logout-btn" onClick={handleLogout}>
                                 <i className="fas fa-sign-out-alt"></i> Logout
                             </button>
                         </div>
