@@ -98,7 +98,7 @@ router.post('/doctor/profile', (req, res) => {
         if (err) {
             return res.status(500).json({ success: false, message: "user not found" })
         }
-        return res.status(201).json({ success: true, bloodDonor: result })
+        return res.status(201).json({ success: true, doctor: result })
     })
 
 })

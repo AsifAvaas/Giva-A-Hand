@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../Components/Navbar';
 import axios from 'axios';
 import VolunteerProfile from '../Components/VolunteerProfile';
+import BloodDonorProfile from '../Components/BloodDonorProfile';
+import DoctorProfile from '../Components/DoctorProfile';
 
 function Profile() {
     const [profile, setProfile] = useState({});
@@ -109,6 +111,13 @@ function Profile() {
                         <span className="font-semibold">Address:</span>
                         {isEditing ? <input type="text" name="address" value={form.address || ''} onChange={handleChange} className="ml-2 p-2 border rounded w-full" /> : <span> {profile.address}</span>}
                     </div>
+                    {profile.approved ? (
+                        <div className="text-green-700">Your profile is approved by the admin</div>
+                    ) : (
+                        <div className="text-red-700">
+                            Your profile is not approved by the admin <span className="text-gray-700"> Please complete all the info</span>
+                        </div>
+                    )}
 
                     <div className="mt-4">
                         {isEditing ? (
@@ -128,6 +137,9 @@ function Profile() {
                     </div>
                 </div>
             </div>
+            {profile.role === 'blood_donors' && <BloodDonorProfile />}
+            {profile.role === 'doctors' && <DoctorProfile />}
+            {profile.role === 'volunteers' && <VolunteerProfile />}
         </div>
     );
 }
