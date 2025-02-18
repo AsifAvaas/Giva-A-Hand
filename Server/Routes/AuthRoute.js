@@ -126,7 +126,7 @@ router.post("/admin/login", (req, res) => {
 
         const token = jwt.sign({ email: user.email }, jwt_secret, { expiresIn: "1h" });
 
-        res.status(201).json({ success: true, message: "Login successful", adminId: user.user_id, token, role: user.role });
+        res.status(201).json({ success: true, message: "Login successful", adminId: user.admin_id, token });
     });
 });
 
