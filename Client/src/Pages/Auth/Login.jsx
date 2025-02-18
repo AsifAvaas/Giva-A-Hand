@@ -5,7 +5,6 @@ import '../../styles/auth.css';
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
     const [error, setError] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
@@ -13,7 +12,7 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', { email, password, role: 'users' });
+            const response = await axios.post('http://localhost:8000/api/login', { email, password });
             if (response.status === 201) {
                 setMsg('Login successful');
                 localStorage.setItem('token', response.data.token);

@@ -8,7 +8,7 @@ const Signup = () => {
         email: '',
         password: '',
         password_confirmation: '',
-        role: 'users',
+        role: 'recievers',
     });
 
     const handleChange = (e) => {
@@ -33,7 +33,6 @@ const Signup = () => {
             console.log(response);
             if (response.status == 201) {
                 console.log('User registered successfully');
-                // localStorage.setItem('token', response.data.token);
                 navigate('/login');
             } else {
                 setError('Invalid credentials');
@@ -82,6 +81,17 @@ const Signup = () => {
                             className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200"
                             required
                         />
+                    </div>
+                    <div>
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                            Role
+                        </label>
+                        <select name="role" id="role" value={formData.role} onChange={handleChange} className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200">
+                            <option value="receivers">Receivers</option>
+                            <option value="volunteers">Volunteers</option>
+                            <option value="doctors">Doctors</option>
+                            <option value="blood_donors">Blood Donors</option>
+                        </select>
                     </div>
 
                     {error && <div className="text-red-500">{error}</div>}
