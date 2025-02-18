@@ -53,5 +53,3 @@ router.get('/users/approved', async (req, res) => {
 
 export default router;
 
-
-const sql2 = "select name,email,phone,address,approved, specialization,freeTime, chamber_Location  from users inner join doctors on users.user_id=doctors.user_id"
