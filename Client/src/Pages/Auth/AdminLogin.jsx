@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/auth.css';
-function Login() {
+function AdminLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,21 +12,16 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', { email, password });
+            const response = await axios.post('http://localhost:8000/api/admin/login', { email, password });
             if (response.status === 201) {
                 setMsg('Login successful');
                 localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userID', response.data.userId);
-                localStorage.setItem('role', response.data.role);
+                localStorage.setItem('adminId', response.data.adminId);
 
-                navigate('/');
+                navigate('/admin/home');
             } else {
                 setError('Invalid credentials');
             }
-
-            console.log(role);
-            console.log('Email:', email);
-            console.log('Password:', password);
         } catch (error) {
             setError('Invalid credentials');
             console.error(error);
@@ -64,4 +59,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default AdminLogin;
