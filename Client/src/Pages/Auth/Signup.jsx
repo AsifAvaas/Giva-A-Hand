@@ -8,7 +8,7 @@ const Signup = () => {
         email: '',
         password: '',
         password_confirmation: '',
-        role: 'recievers',
+        role: 'receivers',
     });
 
     const handleChange = (e) => {
