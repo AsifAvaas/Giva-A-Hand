@@ -24,7 +24,7 @@ function Login() {
                 setError('Invalid credentials');
             }
 
-            console.log(role);
+            console.log(response.data.role);
             console.log('Email:', email);
             console.log('Password:', password);
         } catch (error) {

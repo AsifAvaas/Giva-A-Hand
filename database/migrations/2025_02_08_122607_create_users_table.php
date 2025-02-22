@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('profile_pic')->nullable();
-            $table->enum('role', ['doctor', 'blood_donor', 'volunteer', 'receiver'])->default('receiver');
+            $table->enum('role', ['doctors', 'blood_donors', 'volunteers', 'receivers'])->default('receivers');
             $table->boolean('approved')->default(false);
             $table->timestamps();
         });
