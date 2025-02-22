@@ -2,80 +2,67 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Admin; 
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function getProfile(Request $request)
+   
+    public function register(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:admins',
+            'password' => 'required|string|min:8',
+        ]);
 
-        $adminId = $request->input('userId');
-
-
-
-
-
-
-        $admin = Admin::find($adminId);
-
-        if (!$admin) {
-            return response()->json(['success' => false, 'message' => 'Admin not found'], 404);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
         }
+
+       
+        $admin = Admin::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
         return response()->json([
             'success' => true,
-            'user' => [
-                'userId' => $admin->admin_id,
-                'name' => $admin->name,
-                'email' => $admin->email,
-                'phone' => $admin->phone ?? null,
-
-            ]
-        ], 200);
+            'message' => 'Admin registered successfully',
+            'adminId' => $admin->admin_id,
+        ], 201);
     }
 
-    public function updateProfile(Request $request)
+   
+    public function login(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|string|email',
+            'password' => 'required|string|min:8',
+        ]);
 
-        $adminId = $request->input('userId');
-
-
-        $admin = Admin::find($adminId);
-
-        if (!$admin) {
-            return response()->json(['success' => false, 'message' => 'Admin not found'], 404);
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 400);
         }
 
+        $admin = Admin::where('email', $request->email)->first();
 
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'email' => 'nullable|email|unique:admins,email,' . $admin->id,
-            'password' => 'nullable|min:8|required_with:confirm_password|same:confirm_password',
-            'confirm_password' => 'nullable|min:8',
-            'phone' => 'nullable|string|max:255'
-        ]);
+        if (!$admin || !Hash::check($request->password, $admin->password)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
+        }
 
-
-        $admin->update([
-            'name' => $request->input('name', $admin->name),
-            'email' => $request->input('email', $admin->email),
-            'password' => $request->filled('password') ? Hash::make($request->password) : $admin->password,
-            'phone' => $request->input('phone', $admin->phone),
-        ]);
-
+        
+        $token = $admin->createToken('authToken')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'message' => 'Profile updated successfully',
-            'user' => [
-                'userId' => $admin->admin_id,
-                'name' => $admin->name,
-                'email' => $admin->email,
-                'phone' => $admin->phone ?? null,
-            ]
-        ], 200);
+            'message' => 'Login successful',
+            'adminId' => $admin->admin_id,
+            'token' => $token,
+        ], 201);
     }
-
 }
