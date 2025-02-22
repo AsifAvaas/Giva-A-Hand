@@ -221,35 +221,37 @@ class ProfileController extends Controller
 
 
     
-    public function approveUser(Request $request, $data)
-{
-    $validator = Validator::make($request->all(), [
-        'admin_id' => 'required|exists:admins,admin_id',
-        'user_Id' => 'required|exists:users,user_id',
-    ]);
+public function approveUser(Request $request)
+    {
+        // Validate request
+        $validator = Validator::make($request->all(), [
+            'admin_id' => 'required|exists:admins,admin_id',
+            'user_id' => 'required|exists:users,user_id',
+            'status' => 'required|boolean'
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        if ($validator->fails()) {
+            return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
+        }
+
+        $adminId = $request->input('admin_id');
+        $userId = $request->input('user_id');
+        $status = $request->input('status');
+
+        // Check if admin exists
+        $adminExists = DB::table('admins')->where('admin_id', $adminId)->exists();
+        if (!$adminExists) {
+            return response()->json(['success' => false, 'message' => 'Admin access denied'], 403);
+        }
+
+        // Update user approval status
+        $updated = DB::table('users')->where('user_id', $userId)->update(['approved' => $status]);
+
+        if ($updated) {
+            return response()->json(['success' => true, 'message' => 'User approval status updated'], 200);
+        } else {
+            return response()->json(['success' => false, 'message' => 'Update failed'], 500);
+        }
     }
-
-    $adminId = $request->input('admin_id');
-    $userId = $request->input('user_Id');
-
-    
-    $adminCheck = DB::select('SELECT admin_id FROM admins WHERE admin_id = ?', [$adminId]);
-    if (!$adminCheck) {
-        return response()->json(['success' => false, 'message' => 'Admin access denied'], 500);
-    }
-
-    
-    $sql = 'UPDATE users SET approved = ? WHERE user_id = ?';
-    $result = DB::update($sql, [$data, $userId]);
-
-    if ($result) {
-        return response()->json(['success' => true, 'message' => 'User approval status updated'], 201);
-    } else {
-        return response()->json(['success' => false, 'message' => 'Update failed'], 500);
-    }
-}
 
 }

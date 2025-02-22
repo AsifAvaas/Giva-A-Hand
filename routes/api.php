@@ -26,7 +26,7 @@ Route::post('/doctor/profile', [ProfileController::class, 'getDoctorProfile']);
 Route::put('/doctor/profile', [ProfileController::class, 'updateDoctorProfile']);
 Route::post('/admin/profile', [ProfileController::class, 'getAdminProfile']);
 Route::put('/admin/profile', [ProfileController::class, 'updateAdminProfile']);
-Route::put('/admin/approve/{data}', [ProfileController::class, 'approveUser']);
+Route::put('/admin/approve', [ProfileController::class, 'approveUser']);
 
 
 Route::get('/allUsers', [UserController::class, 'getAllUsers']);
