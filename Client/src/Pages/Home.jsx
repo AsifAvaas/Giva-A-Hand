@@ -1,9 +1,11 @@
 import React from 'react';
 import Navbar from '../Components/Navbar';
 import '../styles/home.css';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
     const role = localStorage.getItem('role');
+    const navigate = useNavigate();
     return (
         <div>
             <Navbar />
@@ -31,19 +33,26 @@ function Home() {
                             <div className="card-image sponsor-image"></div>
                             <h3>Sponsor</h3>
                             <p>If you need sponsors for education and creative arts programs, outreach, and skate sessions.</p>
-                            <button className="card-btn">Contact ➔</button>
+                            <button onClick={() => navigate('/volunteer/page')} className="card-btn">
+                                Contact ➔
+                            </button>
                         </div>
                         <div className="feature-card">
                             <div className="card-image blood-bank-image"></div>
                             <h3>Blood Bank</h3>
                             <p>If you need volunteers for our blood donation programs, outreach, and awareness sessions.</p>
-                            <button className="card-btn">Need ➔</button>
+                            <button onClick={() => navigate('/BloodDonor/page')} className="card-btn">
+                                Need ➔
+                            </button>
                         </div>
+
                         <div className="feature-card">
                             <div className="card-image doctor-image"></div>
                             <h3>Doctor</h3>
                             <p>If you need doctors who will give you free treatement.So ,withiut any hesitation you can contact with us.</p>
-                            <button className="card-btn">Contact ➔</button>
+                            <button onClick={() => navigate('/doctor/page')} className="card-btn">
+                                Contact ➔
+                            </button>
                         </div>
                     </div>
                 </section>

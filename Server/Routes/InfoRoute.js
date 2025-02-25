@@ -25,27 +25,48 @@ router.get('/allUsers', async (req, res) => {
 
 })
 
-router.get('/users/approved', async (req, res) => {
+
+router.get('/volunteers/users', async (req, res) => {
     try {
-
-
         const sql1 = "SELECT users.user_id, name, email, phone,address, (SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills,(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability FROM users WHERE user_id IN (SELECT user_id FROM volunteers) and users.approved=true"
         const [volunteers] = await db.promise().query(sql1)
+        return res.status(201).json({ success: true, volunteers })
 
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server Error", error });
+    }
+
+})
+
+router.get('/doctors/users', async (req, res) => {
+
+    try {
         const sql2 = "select users.user_id, name,email,phone,address, specialization,freeTime, chamber_Location  from users inner join doctors on users.user_id=doctors.user_id where approved=true"
 
         const [doctors] = await db.promise().query(sql2)
+        return res.status(201).json({ success: true, doctors })
 
-        const sql3 = "select users.user_id, name,email,phone,address, blood_group ,last_donation from users inner join blood_donors on users.user_id=blood_donors.user_id where approved=true"
-        const [bloodDonors] = await db.promise().query(sql3)
-
-        return res.status(201).json({ success: true, volunteers, doctors, bloodDonors })
     } catch (error) {
         return res.status(500).json({ success: false, message: "Server Error", error });
     }
 
 
 })
+
+router.get('/donors/users', async (req, res) => {
+
+    try {
+
+        const sql3 = "select users.user_id, name,email,phone,address, blood_group ,last_donation from users inner join blood_donors on users.user_id=blood_donors.user_id where approved=true"
+        const [bloodDonors] = await db.promise().query(sql3)
+        return res.status(201).json({ success: true, bloodDonors })
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Server Error", error });
+    }
+
+})
+
+
 
 
 
