@@ -7,12 +7,18 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    
+
     public function getAllUsers()
     {
         try {
             $volunteers = DB::table('users')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved',
+                ->select(
+                    'users.user_id',
+                    'users.name',
+                    'users.email',
+                    'users.phone',
+                    'users.address',
+                    'users.approved',
                     DB::raw('(SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills'),
                     DB::raw('(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability')
                 )
@@ -42,12 +48,18 @@ class UserController extends Controller
         }
     }
 
-  
+
     public function getVolunteers()
     {
         try {
             $volunteers = DB::table('users')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address',
+                ->select(
+                    'users.user_id',
+                    'users.name',
+                    'users.email',
+                    'users.phone',
+                    'users.address',
+                    DB::raw('(SELECT volunteer_id FROM volunteers WHERE volunteers.user_id = users.user_id) AS volunteer_id'),
                     DB::raw('(SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills'),
                     DB::raw('(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability')
                 )
@@ -63,13 +75,13 @@ class UserController extends Controller
         }
     }
 
-    
+
     public function getDoctors()
     {
         try {
             $doctors = DB::table('users')
                 ->join('doctors', 'users.user_id', '=', 'doctors.user_id')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'doctors.doctor_id', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
                 ->where('users.approved', true)
                 ->get();
 
@@ -79,13 +91,13 @@ class UserController extends Controller
         }
     }
 
-    
+
     public function getDonors()
     {
         try {
             $bloodDonors = DB::table('users')
                 ->join('blood_donors', 'users.user_id', '=', 'blood_donors.user_id')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'blood_donors.blood_group', 'blood_donors.last_donation')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'blood_donors.blood_donor_id', 'blood_donors.blood_group', 'blood_donors.last_donation')
                 ->where('users.approved', true)
                 ->get();
 
