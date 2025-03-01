@@ -40,10 +40,12 @@ function AdminPage() {
         }
     };
     return (
-        <div>
+        <div className="min-h-screen bg-gray-50">
             <Navbar />
-            <div className=" container p-6 mt-24">
-                <h1 className="text-3xl mb-16">Admin Page</h1>
+            <div className="admin-page">
+            <h1 className="text-3xl mb-16">Admin Page</h1>
+                <div className="flex flex-row gap-6">
+                <div className="w-2/3">
                 {volunteer && volunteer.length > 0 && (
                     <div className="mt-6">
                         <h2 className="text-2xl font-bold mb-4">Volunteers</h2>
@@ -83,7 +85,38 @@ function AdminPage() {
                         </div>
                     </div>
                 )}
-
+            </div>
+            {/*--------------volunteer piechart------------ */}
+        <div className="w-1/3">
+            <div className="statistics-container">
+            <h2 className="text-2xl font-bold mb-4">Volunteer  Status</h2>
+                <div className="chart-container">
+                            <ResponsiveContainer width="100%" height={350}>
+                            <PieChart>
+                                    <Pie
+                                        data={[
+                                            { name: 'Approved', value: volunteer.filter(v => v.approved).length },
+                                            { name: 'Pending', value: volunteer.filter(v => !v.approved).length }
+                                        ]}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        <Cell fill="#4CAF50" />
+                                        <Cell fill="#FFA726" />
+                                    </Pie>
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        </div>
+                        </div>
+            </div>
+        <div className="flex flex-row gap-6">
+            <div className="w-2/3">
                 {doctor && doctor.length > 0 && (
                     <div className="mt-6">
                         <h2 className="text-2xl font-bold mb-4">Doctors</h2>
@@ -123,7 +156,38 @@ function AdminPage() {
                         </div>
                     </div>
                 )}
-
+             </div>
+                         {/*--------------Doctors piechart------------ */}
+             <div className="w-1/3">
+                <div className="statistics-container">
+                    <h2 className="text-2xl font-bold mb-4">Doctors  Status</h2>
+                        <div className="chart-container">
+                            <ResponsiveContainer width="100%" height={350}>
+                            <PieChart>
+                                    <Pie
+                                        data={[
+                                            { name: 'Approved', value: doctor.filter(d => d.approved).length },
+                                            { name: 'Pending', value: doctor.filter(d => !d.approved).length }
+                                        ]}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        <Cell fill="#2196F3" />
+                                        <Cell fill="#FF7043" />
+                                    </Pie>
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-row gap-6">
+            <div className="w-2/3">
                 {donor && donor.length > 0 && (
                     <div className="mt-6">
                         <h2 className="text-2xl font-bold mb-4">Blood Donors</h2>
@@ -163,58 +227,12 @@ function AdminPage() {
                         </div>
                     </div>
                 )}
-                {/*-------------------pie chart-------------- */}
-                <div className="statistics- container p-6 mt-24">
-                    <h2 className="text-2xl font-bold mb-4">Application Statistics</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            </div>
+                {/*-------------------blood donor pie chart-------------- */}
+                <div className="w-1/3">
+                <div className="statistics-container">
+                    <h2 className="text-2xl font-bold mb-4">Blood Donors  Status</h2>
                         <div className="chart-container">
-                            <h3 className="text-xl mb-2">Volunteers Status</h3>
-                            <ResponsiveContainer width="100%" height={350}>
-                            <PieChart>
-                                    <Pie
-                                        data={[
-                                            { name: 'Approved', value: volunteer.filter(v => v.approved).length },
-                                            { name: 'Pending', value: volunteer.filter(v => !v.approved).length }
-                                        ]}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                    >
-                                        <Cell fill="#4CAF50" />
-                                        <Cell fill="#FFA726" />
-                                    </Pie>
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="chart-container">
-                            <h3 className="text-xl mb-2">Doctors Status</h3>
-                            <ResponsiveContainer width="100%" height={350}>
-                            <PieChart>
-                                    <Pie
-                                        data={[
-                                            { name: 'Approved', value: doctor.filter(d => d.approved).length },
-                                            { name: 'Pending', value: doctor.filter(d => !d.approved).length }
-                                        ]}
-                                        cx="50%"
-                                        cy="50%"
-                                        innerRadius={60}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                    >
-                                        <Cell fill="#2196F3" />
-                                        <Cell fill="#FF7043" />
-                                    </Pie>
-                                    <Legend />
-                                </PieChart>
-                            </ResponsiveContainer>
-                        </div>
-                        <div className="chart-container">
-                            <h3 className="text-xl mb-2">Blood Donors Status</h3>
                             <ResponsiveContainer width="100%" height={350}>
                             <PieChart>
                                     <Pie
@@ -238,8 +256,10 @@ function AdminPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+      
         </div>
+        </div>
+    </div>
     );
 }
 export default AdminPage;
