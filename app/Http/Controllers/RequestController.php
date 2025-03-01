@@ -115,49 +115,87 @@ class RequestController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+
         $userRequests = \App\Models\Request::where('seeker_id', $request->seeker_id)
-            ->with(['volunteer', 'doctor', 'bloodDonor']) // Eager load the relations
+            ->with(['volunteer', 'doctor', 'bloodDonor'])
             ->get();
+
         $userRequests = $userRequests->map(function ($request) {
+            $helperData = null;
+
             if ($request->helper_type == 'volunteers' && $request->volunteer) {
-                $request->helper_data = $request->volunteer; // Add volunteer data
+                $helperData = $request->volunteer;
             } elseif ($request->helper_type == 'doctors' && $request->doctor) {
-                $request->helper_data = $request->doctor; // Add doctor data
+                $helperData = $request->doctor;
             } elseif ($request->helper_type == 'blood_donors' && $request->bloodDonor) {
-                $request->helper_data = $request->bloodDonor; // Add blood donor data
-            } else {
-                $request->helper_data = null; // No helper data found
+                $helperData = $request->bloodDonor;
             }
 
-            // Remove the loaded relationships to avoid sending extra data
-            unset($request->volunteer, $request->doctor, $request->bloodDonor);
+            if ($helperData && isset($helperData->user_id)) {
+                $user = \App\Models\User::select('name', 'phone', 'email', 'profile_pic')
+                    ->where('user_id', $helperData->user_id)
+                    ->first();
+            } else {
+                $user = null;
+            }
 
-            return $request;
+            return [
+                'message' => $request->message,
+                'status' => $request->status,
+                'helper_data' => $user,
+            ];
         });
 
         return response()->json([
             'success' => true,
             'data' => $userRequests
-        ], 200);
+        ], 201);
     }
+
 
     public function HelperRequest(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'helper_id' => 'required|integer',
-
         ]);
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
 
+        // Get all requests for the given helper_id
         $helperRequests = \App\Models\Request::where('helper_id', $request->helper_id)->get();
 
+        // Modify the response for each request
+        $helperRequests = $helperRequests->map(function ($request) {
+            // Fetch user details based on seeker_id
+            $user = \App\Models\User::where('user_id', $request->seeker_id)->first();
+
+            // If user exists, get the necessary fields
+            if ($user) {
+                $request->user_details = [
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'phone' => $user->phone,
+                    'profile_pic' => $user->profile_pic,
+                ];
+            }
+
+            // Return the relevant data, including the request_id
+            return [
+                'request_id' => $request->request_id,  // Adding request_id to the response
+                'status' => $request->status,
+                'message' => $request->message,
+                'user_details' => $request->user_details ?? null,  // If no user found, return null
+            ];
+        });
+
+        // Return the modified requests data
         return response()->json([
             'success' => true,
             'data' => $helperRequests
         ], 201);
     }
+
 
 }

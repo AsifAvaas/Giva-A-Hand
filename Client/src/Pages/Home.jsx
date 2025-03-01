@@ -3,6 +3,7 @@ import Navbar from '../Components/Navbar';
 import '../styles/home.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Helper from './Helper';
 
 function Home() {
     const role = localStorage.getItem('role');
@@ -74,13 +75,21 @@ function Home() {
                     </div>
                 </section>
             ) : (
-                <div>Hello</div>
+                <Helper />
             )}
             {role === 'receivers' && (
                 <div className="container ">
                     {userRequest.map((request, index) => (
                         <div key={index} className="request-card border p-3 rounded m-3 bg-slate-300">
-                            <h3>{request.helper_id}</h3>
+                            <h1>Profile Pic:</h1>
+                            <h3>{request.helper_data.profile_pic}</h3>
+                            <h1>Name:</h1>
+                            <h3>{request.helper_data.name}</h3>
+                            <h1>Email:</h1>
+                            <h3>{request.helper_data.email}</h3>
+                            <h1>Phone:</h1>
+                            <h3>{request.helper_data.phone}</h3>
+                            <h4>Message</h4>
                             <p>{request.message}</p>
                             {request.status === 1 ? <p className="text-green-700">Accepted</p> : <p className="text-red-600">Not Accepted</p>}
                         </div>
