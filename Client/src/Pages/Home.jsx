@@ -9,7 +9,6 @@ function Home() {
     return (
         <div>
             <Navbar />
-
             <section className="hero-section">
                 <div className="hero-content">
                     <h1 className="hero-title">Give A Hand</h1>

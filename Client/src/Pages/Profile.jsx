@@ -93,8 +93,15 @@ function Profile() {
             <div className="container mx-auto p-4">
                 <div className="profile-container">
                 <div className="profile-image-wrapper">
-                {profile.profile_pic ? (<img src={profile.profile_pic} alt="Profile" className="profile-image" />
-                    ) : (<DefaultAvatar />)}
+                {profile.profile_pic ? (
+        <>
+            <img src={profile.profile_pic} alt="Profile" className="profile-image" />
+            <div className="profile-text-overlay">Profile</div>
+        </>
+        ) : (<><DefaultAvatar />
+            <div className="profile-text-overlay">Profile</div>
+        </>
+            )}
                 </div>
                 {isEditing && <input type="file" onChange={handleFileInput}></input>}
                     <div className="text-lg mb-2">

@@ -1,42 +1,35 @@
 <?php
-
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\BloodDonorController;
-use App\Http\Controllers\RecieverController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\VolunteerInfoController;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-Route::post("/register", [RegisterController::class, "register"]);
-// Route::post("/login", [LoginController::class, "login"]);
-Route::middleware([EnsureFrontendRequestsAreStateful::class])->post('/login', [LoginController::class, 'login']);
-Route::post("/logout", [LoginController::class, "logout"]);
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 
 
-Route::post("/profile", [UserController::class, "getProfile"]);
-Route::post("/updateProfile", [UserController::class, "updateProfile"]);
 
-Route::post('/admins/profile', [AdminController::class, 'getProfile']);
-Route::post('/admins/updateProfile', [AdminController::class, 'updateProfile']);
+Route::post('/admin/register', [AdminController::class, 'register']);
+Route::post('/admin/login', [AdminController::class, 'login']);
 
-// Route::post('/blood_donors/profile', [BloodDonorController::class, 'getProfile']);
-// Route::post('/blood_donors/updateProfile', [BloodDonorController::class, 'updateProfile']);
 
-// Route::post('/recievers/profile', [RecieverController::class, 'getProfile']);
-// Route::post('/recievers/updateProfile', [RecieverController::class, 'updateProfile']);
 
-// Route::post('/volunteer_infos/profile', [VolunteerInfoController::class, 'getProfile']);
-// Route::post('/volunteer_infos/updateProfile', [VolunteerInfoController::class, 'updateProfile']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
+
+Route::post('/profile', [ProfileController::class, 'getProfile']);
+Route::put('/profile', [ProfileController::class, 'updateProfile']);
+Route::post('/volunteer/profile', [ProfileController::class, 'getVolunteerProfile']);
+Route::put('/volunteer/profile', [ProfileController::class, 'updateVolunteerProfile']);
+Route::post('/bloodDonor/profile', [ProfileController::class, 'getBloodDonorProfile']);
+Route::put('/bloodDonor/profile', [ProfileController::class, 'updateBloodDonorProfile']);
+Route::post('/doctor/profile', [ProfileController::class, 'getDoctorProfile']);
+Route::put('/doctor/profile', [ProfileController::class, 'updateDoctorProfile']);
+Route::post('/admin/profile', [ProfileController::class, 'getAdminProfile']);
+Route::put('/admin/profile', [ProfileController::class, 'updateAdminProfile']);
+Route::put('/admin/approve', [ProfileController::class, 'approveUser']);
+
+
+Route::get('/allUsers', [UserController::class, 'getAllUsers']);
+Route::get('/volunteers/users', [UserController::class, 'getVolunteers']);
+Route::get('/doctors/users', [UserController::class, 'getDoctors']);
+Route::get('/donors/users', [UserController::class, 'getDonors']);

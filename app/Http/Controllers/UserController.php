@@ -2,72 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
-    public function getProfile(Request $request)
+    
+    public function getAllUsers()
     {
+        try {
+            $volunteers = DB::table('users')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved',
+                    DB::raw('(SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills'),
+                    DB::raw('(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability')
+                )
+                ->whereIn('users.user_id', function ($query) {
+                    $query->select('user_id')->from('volunteers');
+                })
+                ->get();
 
-        $userId = $request->input('user_Id');
+            $doctors = DB::table('users')
+                ->join('doctors', 'users.user_id', '=', 'doctors.user_id')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
+                ->get();
 
+            $bloodDonors = DB::table('users')
+                ->join('blood_donors', 'users.user_id', '=', 'blood_donors.user_id')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved', 'blood_donors.blood_group', 'blood_donors.last_donation')
+                ->get();
 
-        $user = User::find($userId);
-
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+            return response()->json([
+                'success' => true,
+                'volunteers' => $volunteers,
+                'doctors' => $doctors,
+                'bloodDonors' => $bloodDonors
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Server Error', 'error' => $e->getMessage()], 500);
         }
-
-        return response()->json([
-            'success' => true,
-
-            'user' => $user,
-
-        ], 200);
     }
 
-
-    public function updateProfile(Request $request)
+  
+    public function getVolunteers()
     {
-        $userId = $request->input('user_Id'); // Ensure correct key case
-        $user = User::find($userId);
+        try {
+            $volunteers = DB::table('users')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address',
+                    DB::raw('(SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills'),
+                    DB::raw('(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability')
+                )
+                ->whereIn('users.user_id', function ($query) {
+                    $query->select('user_id')->from('volunteers');
+                })
+                ->where('users.approved', true)
+                ->get();
 
-
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+            return response()->json(['success' => true, 'volunteers' => $volunteers], 201);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Server Error', 'error' => $e->getMessage()], 500);
         }
-
-        // Validation
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'email' => "nullable|email|unique:users,email,{$user->user_id},user_id", // Fixed unique rule
-            'password' => 'nullable|min:8|same:confirm_password', // Removed required_with
-            'confirm_password' => 'nullable|min:8',
-            'phone' => 'nullable|string|max:255'
-        ]);
-
-        // Update fields
-        $user->update([
-            'name' => $request->input('name', $user->name),
-            'email' => $request->input('email', $user->email),
-            'password' => $request->filled('password') ? Hash::make($request->password) : $user->password,
-            'phone' => $request->input('phone', $user->phone),
-            'address' => $request->input('address', $user->address),
-            'profile_pic' => $request->input('profile_pic', $user->profile_pic),
-            'role' => $request->input('role', $user->role),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated successfully',
-            'user' => $user,
-        ], 201);
     }
 
+    
+    public function getDoctors()
+    {
+        try {
+            $doctors = DB::table('users')
+                ->join('doctors', 'users.user_id', '=', 'doctors.user_id')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
+                ->where('users.approved', true)
+                ->get();
 
+            return response()->json(['success' => true, 'doctors' => $doctors], 201);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Server Error', 'error' => $e->getMessage()], 500);
+        }
+    }
 
+    
+    public function getDonors()
+    {
+        try {
+            $bloodDonors = DB::table('users')
+                ->join('blood_donors', 'users.user_id', '=', 'blood_donors.user_id')
+                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'blood_donors.blood_group', 'blood_donors.last_donation')
+                ->where('users.approved', true)
+                ->get();
 
+            return response()->json(['success' => true, 'bloodDonors' => $bloodDonors], 201);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Server Error', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

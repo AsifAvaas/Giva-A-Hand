@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../Components/Navbar';
 import axios from 'axios';
+import '../styles/adminPage.css';
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 function AdminPage() {
     const adminId = localStorage.getItem('adminId');
-    const [volunteer, setVolunteer] = useState('');
-    const [doctor, setDoctor] = useState('');
-    const [donor, setDonor] = useState('');
+    const [volunteer, setVolunteer] = useState([]);
+    const [doctor, setDoctor] = useState([]);
+    const [donor, setDonor] = useState([]);
     const fetchUsers = async () => {
         try {
             const response = await axios.get('http://127.0.0.1:8000/api/allUsers');
@@ -161,9 +163,83 @@ function AdminPage() {
                         </div>
                     </div>
                 )}
+                {/*-------------------pie chart-------------- */}
+                <div className="statistics- container p-6 mt-24">
+                    <h2 className="text-2xl font-bold mb-4">Application Statistics</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="chart-container">
+                            <h3 className="text-xl mb-2">Volunteers Status</h3>
+                            <ResponsiveContainer width="100%" height={350}>
+                            <PieChart>
+                                    <Pie
+                                        data={[
+                                            { name: 'Approved', value: volunteer.filter(v => v.approved).length },
+                                            { name: 'Pending', value: volunteer.filter(v => !v.approved).length }
+                                        ]}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        <Cell fill="#4CAF50" />
+                                        <Cell fill="#FFA726" />
+                                    </Pie>
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="chart-container">
+                            <h3 className="text-xl mb-2">Doctors Status</h3>
+                            <ResponsiveContainer width="100%" height={350}>
+                            <PieChart>
+                                    <Pie
+                                        data={[
+                                            { name: 'Approved', value: doctor.filter(d => d.approved).length },
+                                            { name: 'Pending', value: doctor.filter(d => !d.approved).length }
+                                        ]}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        <Cell fill="#2196F3" />
+                                        <Cell fill="#FF7043" />
+                                    </Pie>
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                        <div className="chart-container">
+                            <h3 className="text-xl mb-2">Blood Donors Status</h3>
+                            <ResponsiveContainer width="100%" height={350}>
+                            <PieChart>
+                                    <Pie
+                                        data={[
+                                            { name: 'Approved', value: donor.filter(d => d.approved).length },
+                                            { name: 'Pending', value: donor.filter(d => !d.approved).length }
+                                        ]}
+                                        cx="50%"
+                                        cy="50%"
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        dataKey="value"
+                                    >
+                                        <Cell fill="#E91E63" />
+                                        <Cell fill="#9C27B0" />
+                                    </Pie>
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
-
 export default AdminPage;
