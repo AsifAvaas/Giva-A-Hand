@@ -36,4 +36,10 @@ class Volunteer extends Model
             $volunteer->volunteer_id = $randomId; // Assign random ID
         });
     }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class, 'helper_id', 'volunteer_id')
+            ->where('helper_type', 'volunteers');
+    }
 }

@@ -41,4 +41,10 @@ class Doctor extends Model
         });
     }
 
+    public function requests()
+    {
+        return $this->hasMany(Request::class, 'helper_id', 'doctor_id')
+            ->where('helper_type', 'doctors');
+    }
+
 }
