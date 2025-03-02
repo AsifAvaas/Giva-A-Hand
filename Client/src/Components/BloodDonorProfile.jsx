@@ -1,27 +1,26 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
-function VolunteerProfile() {
+function BloodDonorProfile() {
     const userId = localStorage.getItem('userID');
-    const [volunteer, setVolunteer] = useState({
-        skills: '',
-        availability: '',
+    const [donor, setDonor] = useState({
+        blood_group: '',
+        last_donation: '',
     });
 
     const [form, setForm] = useState({
         user_Id: userId,
-        skills: '',
-        availability: 'Occasional',
+        blood_group: '',
+        last_donation: '',
     });
     const [isEditing, setIsEditing] = useState(false);
 
     const fetchData = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/volunteer/profile', { user_Id: userId });
+            const response = await axios.post('http://localhost:8000/api/bloodDonor/profile', { user_Id: userId });
             if (response.status === 201) {
-                const data = response.data.volunteer[0];
-                console.log(data);
-                setVolunteer(data);
+                const data = response.data.bloodDonor[0];
+                setDonor(data);
             } else {
                 console.log('somethiung went wrong');
             }
@@ -44,7 +43,7 @@ function VolunteerProfile() {
         console.log('Updated Profile:', userId);
         console.log('Updated Profile:', form);
         try {
-            const response = await axios.put('http://localhost:8000/api/volunteer/profile', { user_Id: form.user_Id, skills: form.skills, availability: form.availability });
+            const response = await axios.put('http://localhost:8000/api/bloodDonor/profile', { user_Id: form.user_Id, blood_group: form.blood_group, last_donation: form.last_donation });
             if (response.status === 201) {
                 console.log('Profile updated successfully');
                 fetchData();
@@ -61,24 +60,28 @@ function VolunteerProfile() {
             <div className="bg-white p-6 rounded-lg">
                 <h1 className="text-2xl">Blood Donor Information</h1>
                 <div className="text-lg mb-2">
-                    <span className="font-semibold">Skills:</span>
-                    {isEditing ? <input type="text" name="skills" value={form.skills || ''} onChange={handleChange} className="ml-2 p-2 border rounded" /> : <span> {volunteer.skills}</span>}
-                </div>
-                <div className="text-lg mb-2">
-                    <span className="font-semibold">Availability:</span>
+                    <span className="font-semibold">Blood Group:</span>
                     {isEditing ? (
-                        <select name="availability" value={form.availability || ''} onChange={handleChange} className="ml-2 p-2 border rounded">
-                            {['Occasional', 'Full-Time', 'Part-Time'].map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
+                        <select name="blood_group" value={form.blood_group || ''} onChange={handleChange} className="ml-2 p-2 border rounded">
+                            <option value="">Select Blood Group</option>
+                            {['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'].map((group) => (
+                                <option key={group} value={group}>
+                                    {group}
                                 </option>
                             ))}
                         </select>
                     ) : (
-                        <span> {volunteer.availability}</span>
+                        <span> {donor.blood_group}</span>
                     )}
                 </div>
-
+                <div className="text-lg mb-2">
+                    <span className="font-semibold">Last donation date:</span>
+                    {isEditing ? (
+                        <input type="date" name="last_donation" value={form.last_donation || ''} onChange={handleChange} className="ml-2 p-2 border rounded" />
+                    ) : (
+                        <span> {donor.last_donation ? new Date(donor.last_donation).toISOString().split('T')[0] : ''}</span>
+                    )}
+                </div>
                 <div className="mt-4">
                     {isEditing ? (
                         <>
@@ -100,4 +103,4 @@ function VolunteerProfile() {
     );
 }
 
-export default VolunteerProfile;
+export default BloodDonorProfile;

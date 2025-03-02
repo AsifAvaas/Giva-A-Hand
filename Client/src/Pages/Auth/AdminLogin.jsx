@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../styles/auth.css';
-function Login() {
+import '../../styles/adminLogin.css';
+function AdminLogin() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,23 +12,16 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', { email, password });
+            const response = await axios.post('http://localhost:8000/api/admin/login', { email, password });
             if (response.status === 201) {
                 setMsg('Login successful');
-                console.log(response.data);
                 localStorage.setItem('token', response.data.token);
-                localStorage.setItem('userID', response.data.userId);
-                localStorage.setItem('role', response.data.role);
-                localStorage.setItem('helperId', response.data.helperId);
+                localStorage.setItem('adminId', response.data.adminId);
 
-                navigate('/');
+                navigate('/admin/home');
             } else {
                 setError('Invalid credentials');
             }
-
-            console.log(response.data.role);
-            console.log('Email:', email);
-            console.log('Password:', password);
         } catch (error) {
             setError('Invalid credentials');
             console.error(error);
@@ -38,8 +31,8 @@ function Login() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="w-full max-w-md p-8 space-y-6 bg-white rounded shadow-md">
-                <h2 className="text-2xl font-bold text-center">Login</h2>
-                <form onSubmit={handleSubmit} className="space-y-4">
+            <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Admin Login</h2>
+            <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700">Email:</label>
                         <input name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="w-full px-3 py-2 mt-1 border border-gray-300 rounded focus:outline-none focus:ring focus:border-blue-300" />
@@ -51,7 +44,17 @@ function Login() {
 
                     {error && <div className="text-red-500">{error}</div>}
                     {msg && <div className="text-green-500">{msg}</div>}
-                    <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                    <button
+                        className="w-full px-4 py-3 font-bold
+                            bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500
+                            rounded-md hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600
+                            transform hover:-translate-y-0.5 active:translate-y-0
+                            transition-all duration-200 ease-in-out
+                            focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2
+                            shadow-lg hover:shadow-xl
+                            text-white text-xl tracking-wider
+                            flex items-center justify-center"
+                    >
                         Login
                     </button>
                     <p className="text-sm text-center text-gray-600">
@@ -66,4 +69,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default AdminLogin;
