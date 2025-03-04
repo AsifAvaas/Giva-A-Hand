@@ -22,9 +22,9 @@ function Reciever() {
         fetchRequest();
     }, []);
     return (
-        <div>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
             <section className="help-section">
-                <h2 className="section-title">Need help?</h2>
+            <h2 className="text-4xl font-bold text-center text-gray-800 mb-12 relative after:content-[''] after:absolute after:-bottom-4 after:left-1/2 after:-translate-x-1/2 after:w-20 after:h-1 after:bg-blue-500">Need help?</h2>
 
                 <div className="feature-cards">
                     <div className="feature-card">
@@ -55,23 +55,49 @@ function Reciever() {
                 </div>
             </section>
             <div className="container ">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {userRequest.map((request, index) => (
-                    <div key={index} className="request-card border p-3 rounded m-3 bg-slate-300">
+                    <div key={index}                
+                     className="bg-white rounded-2xl shadow-lg p-8 transform perspective-1000 hover:rotate-2 hover:scale-105 transition-all duration-300 hover:shadow-2xl border border-gray-100">
+                        <div className="relative mb-6 transform hover:-rotate-1 transition-transform duration-300">
+
                         <img className="max-w-56 rounded-xl" src={request.helper_data.profile_pic} alt="Profile Pic" />
                         {/* <h3>{request.helper_data.profile_pic}</h3> */}
-                        <h1>Name:</h1>
-                        <h3>{request.helper_data.name}</h3>
-                        <h1>Email:</h1>
-                        <h3>{request.helper_data.email}</h3>
-                        <h1>Phone:</h1>
-                        <h3>{request.helper_data.phone}</h3>
-                        <h4>Message</h4>
-                        <p>{request.message}</p>
+                        <div className="space-y-6 p-6">
+    <div className="flex flex-col space-y-2">
+        <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Name</label>
+        <h3 className="text-lg font-medium text-gray-800 border-b border-gray-200 pb-2">
+            {request.helper_data.name}
+        </h3>
+    </div>
+    <div className="flex flex-col space-y-2">
+        <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Email</label>
+        <h3 className="text-lg font-medium text-gray-800 border-b border-gray-200 pb-2">
+            {request.helper_data.email}
+        </h3>
+    </div>
+    <div className="flex flex-col space-y-2">
+        <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Phone</label>
+        <h3 className="text-lg font-medium text-gray-800 border-b border-gray-200 pb-2">
+            {request.helper_data.phone}
+        </h3>
+    </div>
+                        <div className="mt-8">
+        <label className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Message</label>
+        <p className="mt-2 text-gray-600 bg-gray-50 rounded-lg p-4 italic">
+            {request.message}
+        </p>
+    </div>
                         {request.status === 1 ? <p className="text-green-700">Accepted</p> : <p className="text-red-600">Not Accepted</p>}
+                    </div>
+                    </div>
                     </div>
                 ))}
             </div>
+            </div>
         </div>
+        
+
     );
 }
 
