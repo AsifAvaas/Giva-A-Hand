@@ -5,11 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Helper from './Helper';
 import Reciever from './Reciever';
+import Admin from './Admin';
 
 function Home() {
     const backend = import.meta.env.VITE_BACKEND_PORT;
     const role = localStorage.getItem('role');
-    const id = localStorage.getItem('userID');
+
     const navigate = useNavigate();
 
     return (
@@ -29,8 +30,9 @@ function Home() {
                 <h1 className="home-title">Welcome to Give A Hand</h1>
             </div>
 
-            {role !== 'receivers' && role !== 'admins' && <Helper />}
+            {role !== 'receivers' && role !== 'admin' && <Helper />}
             {role === 'receivers' && <Reciever />}
+            {role === 'admin' && <Admin />}
 
             <footer className="footer">
                 <div className="footer-content">

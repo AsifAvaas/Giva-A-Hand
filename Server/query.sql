@@ -75,3 +75,23 @@ CREATE TABLE requests (
   
     CONSTRAINT fk_seeker FOREIGN KEY (seeker_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
+
+
+create table notices(
+	notice_id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    notice_message TEXT NOT NULL,
+    notice_pic varchar(255) null
+);
+
+
+CREATE TABLE notice_users (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    notice_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+    joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_notice FOREIGN KEY (notice_id) REFERENCES notices(notice_id) ON DELETE CASCADE,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+
+    UNIQUE (notice_id, user_id)
+);
