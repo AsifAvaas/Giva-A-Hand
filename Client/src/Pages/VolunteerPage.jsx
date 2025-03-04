@@ -83,6 +83,7 @@ function VolunteerPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {volunteers.map((volunteer) => (
                                 <div key={volunteer.user_id} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+                                    <img src={volunteer.profile_pic} alt="profile photo" />
                                     <h3 className="text-xl font-semibold mb-2">{volunteer.name}</h3>
                                     <p className="text-gray-700">
                                         <strong>Email:</strong> {volunteer.email}
