@@ -8,11 +8,12 @@ import '../styles/profile.css';
 
 const DefaultAvatar = () => (
     <div className="default-avatar">
-      <i className="fas fa-user"></i>
+        <i className="fas fa-user"></i>
     </div>
-  );
-  
+);
+
 function Profile() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [profile, setProfile] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const userId = localStorage.getItem('userID');
@@ -27,7 +28,7 @@ function Profile() {
 
     const fetchProfile = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/profile', { user_Id: userId });
+            const response = await axios.post(`${backend}/api/profile`, { user_Id: userId });
             setProfile(response.data.user[0]);
             setForm(response.data.user[0]);
             console.log(response.data.user[0]);
@@ -51,7 +52,7 @@ function Profile() {
     const handleSubmit = async () => {
         console.log('Updated Profile:', form.user_id);
         try {
-            const response = await axios.put('http://localhost:8000/api/profile', { user_Id: form.user_id, name: form.name, phone: form.phone, address: form.address, profile_pic: form.profile_pic });
+            const response = await axios.put(`${backend}/api/profile`, { user_Id: form.user_id, name: form.name, phone: form.phone, address: form.address, profile_pic: form.profile_pic });
             if (response.status === 201) {
                 console.log('Profile updated successfully');
                 fetchProfile();
@@ -92,18 +93,20 @@ function Profile() {
             <Navbar />
             <div className="container mx-auto p-4">
                 <div className="profile-container">
-                <div className="profile-image-wrapper">
-                {profile.profile_pic ? (
-        <>
-            <img src={profile.profile_pic} alt="Profile" className="profile-image" />
-            <div className="profile-text-overlay">Profile</div>
-        </>
-        ) : (<><DefaultAvatar />
-            <div className="profile-text-overlay">Profile</div>
-        </>
-            )}
-                </div>
-                {isEditing && <input type="file" onChange={handleFileInput}></input>}
+                    <div className="profile-image-wrapper">
+                        {profile.profile_pic ? (
+                            <>
+                                <img src={profile.profile_pic} alt="Profile" className="profile-image" />
+                                <div className="profile-text-overlay">Profile</div>
+                            </>
+                        ) : (
+                            <>
+                                <DefaultAvatar />
+                                <div className="profile-text-overlay">Profile</div>
+                            </>
+                        )}
+                    </div>
+                    {isEditing && <input type="file" onChange={handleFileInput}></input>}
                     <div className="text-lg mb-2">
                         <span className="font-semibold">Name:</span>
                         {isEditing ? <input type="text" name="name" value={form.name || ''} onChange={handleChange} className="ml-2 p-2 border rounded" /> : <span> {profile.name}</span>}
@@ -134,7 +137,7 @@ function Profile() {
                             Your profile is not approved by the admin <span className="text-gray-700"> Please complete all the info</span>
                         </div>
                     )}
- 
+
                     <div className="mt-4">
                         {isEditing ? (
                             <>
