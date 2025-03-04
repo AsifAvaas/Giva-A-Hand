@@ -3,6 +3,7 @@ import Navbar from '../Components/Navbar';
 import axios from 'axios';
 
 function BloodDonor() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [donors, setDonors] = useState([]);
     const [selectedDonor, setSelectedDonor] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +14,7 @@ function BloodDonor() {
 
     useEffect(() => {
         axios
-            .get('http://localhost:8000/api/donors/users')
+            .get(`${backend}/api/donors/users`)
             .then((response) => {
                 setDonors(response.data.bloodDonors);
                 console.log(response.data.bloodDonors);
@@ -50,7 +51,7 @@ function BloodDonor() {
         setSuccess(null);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/request', {
+            const response = await axios.post(`${backend}/api/request`, {
                 seeker_id: localStorage.getItem('userID'),
                 helper_id: selectedDonor.blood_donor_id,
                 helper_type: 'blood_donors',

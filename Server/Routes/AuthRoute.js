@@ -44,34 +44,63 @@ router.post("/register", async (req, res) => {
 });
 
 
-router.post("/login", (req, res) => {
-    const { email, password } = req.body;
 
-    const sql = "SELECT * FROM users WHERE email = ?";
-    db.query(sql, [email], async (err, result) => {
-        if (err) {
-            return res.status(500).json({ message: "Database error" });
+
+router.post("/login", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find user by email
+        const [users] = await db.promise().query("SELECT * FROM users WHERE email = ?", [email]);
+
+        if (users.length === 0) {
+            return res.status(401).json({ message: "User not found" });
         }
 
-        if (result.length === 0) {
-            return res.status(500).json({ message: "User not found" });
-        }
+        const user = users[0];
 
-        const user = result[0];
-
-
+        // Compare passwords
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(500).json({ message: "Invalid credentials" });
+            return res.status(401).json({ message: "Invalid credentials" });
         }
 
+        // Generate JWT token
+        const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET_KEY, { expiresIn: "1h" });
 
-        const token = jwt.sign({ email: user.email }, jwt_secret, { expiresIn: "1h" });
+        // Check if the user exists in helper tables
+        const helperTables = {
+            volunteers: "volunteers",
+            doctors: "doctors",
+            blood_donors: "blood_donors",
+        };
 
-        res.status(201).json({ success: true, message: "Login successful", userId: user.user_id, token, role: user.role });
-    });
+        let helperId = null;
+        let helperType = null;
+
+        for (const [type, table] of Object.entries(helperTables)) {
+            const [helpers] = await db.promise().query(`SELECT * FROM ${table} WHERE user_id = ?`, [user.user_id]);
+            if (helpers.length > 0) {
+                helperId = helpers[0][`${type.slice(0, -1)}_id`]; // e.g., volunteer_id, doctor_id, blood_donor_id
+                helperType = type;
+                break; // Stop checking once a match is found
+            }
+        }
+
+        res.status(201).json({
+            success: true,
+            message: "Login successful",
+            userId: user.user_id,
+            token,
+            role: user.role,
+            helperId,
+            helperType,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 });
-
 
 
 router.post("/admin/register", async (req, res) => {
