@@ -2,12 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 function Helper() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [userRequest, setUserRequest] = useState([]);
     const id = localStorage.getItem('helperId');
 
     const fetchRequest = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/request/helper', { helper_id: id });
+            const response = await axios.post(`${backend}/api/request/helper`, { helper_id: id });
             if (response.status === 201) {
                 console.log(response.data.data);
                 setUserRequest(response.data.data);
@@ -23,7 +24,7 @@ function Helper() {
         const newStatus = currentStatus === 1 ? 0 : 1;
         console.log(requestId);
         try {
-            const response = await axios.put('http://localhost:8000/api/request/approve', {
+            const response = await axios.put(`${backend}/api/request/approve`, {
                 approver_id: id,
                 request_id: requestId,
                 status: newStatus,
