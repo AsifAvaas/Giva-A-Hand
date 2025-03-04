@@ -7,6 +7,7 @@ dotenv.config();
 import authRoutes from "./Routes/AuthRoute.js";
 import ProfileRoutes from './Routes/ProfileRoute.js'
 import infoRoutes from './Routes/InfoRoute.js'
+import requestRoutes from './Routes/RequestRoute.js'
 
 
 
@@ -23,6 +24,7 @@ app.use(cookieParser());
 app.use("/api", authRoutes);
 app.use("/api", ProfileRoutes);
 app.use("/api", infoRoutes);
+app.use("/api", requestRoutes);
 
 
 
