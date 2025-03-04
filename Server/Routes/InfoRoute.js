@@ -28,7 +28,7 @@ router.get('/allUsers', async (req, res) => {
 
 router.get('/volunteers/users', async (req, res) => {
     try {
-        const sql1 = `SELECT users.user_id, name, email, phone,address,
+        const sql1 = `SELECT users.user_id, name, email, phone,address,profile_pic,
         (SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills,
         (SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability,
         (SELECT volunteer_id FROM volunteers WHERE volunteers.user_id = users.user_id) AS volunteer_id
@@ -45,7 +45,7 @@ router.get('/volunteers/users', async (req, res) => {
 router.get('/doctors/users', async (req, res) => {
 
     try {
-        const sql2 = `select users.user_id, name,email,phone,address,
+        const sql2 = `select users.user_id, name,email,phone,address,profile_pic,
          specialization,freeTime,doctor_id, chamber_Location 
           from users inner join doctors on 
           users.user_id=doctors.user_id
@@ -65,7 +65,7 @@ router.get('/donors/users', async (req, res) => {
 
     try {
 
-        const sql3 = `select users.user_id, name,email,phone,address,
+        const sql3 = `select users.user_id, name,email,phone,address,profile_pic,
         blood_donor_id, blood_group ,last_donation
          from users inner join blood_donors on users.user_id=blood_donors.user_id
           where approved=true`

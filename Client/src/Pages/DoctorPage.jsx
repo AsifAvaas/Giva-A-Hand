@@ -87,6 +87,7 @@ function DoctorPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {doctors.map((doctor) => (
                                 <div key={doctor.user_id} className="bg-white shadow-md rounded-lg p-6 border border-gray-300 transition-transform transform hover:scale-105 duration-300">
+                                    <img src={doctor.profile_pic} alt="Photo" />
                                     <h3 className="text-xl font-semibold mb-2 text-gray-900">{doctor.name}</h3>
                                     <p className="text-gray-700">
                                         <strong>Email:</strong> {doctor.email}
