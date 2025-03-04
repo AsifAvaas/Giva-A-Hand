@@ -95,3 +95,5 @@ CREATE TABLE notice_users (
 
     UNIQUE (notice_id, user_id)
 );
+
+

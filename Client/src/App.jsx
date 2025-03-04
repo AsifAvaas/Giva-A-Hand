@@ -8,6 +8,9 @@ import AdminPage from './Pages/AdminPage';
 import VolunteerPage from './Pages/VolunteerPage';
 import DoctorPage from './Pages/DoctorPage';
 import BloodDonor from './Pages/BloodDonor';
+import NewNotice from './Pages/NewNotice';
+import Notices from './Pages/Notices';
+import NoticeBoard from './Pages/NoticeBoard';
 
 function App() {
     return (
@@ -21,6 +24,9 @@ function App() {
             <Route path="/volunteer/page" element={<VolunteerPage />} />
             <Route path="/doctor/page" element={<DoctorPage />} />
             <Route path="/BloodDonor/page" element={<BloodDonor />} />
+            <Route path="/newNotice" element={<NewNotice />} />
+            <Route path="/notices" element={<Notices />} />
+            <Route path="/notice/:id" element={<NoticeBoard />} />
         </Routes>
     );
 }

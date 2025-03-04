@@ -65,6 +65,11 @@ function Navbar() {
                                     <i className="fas fa-user"></i> DashBoard
                                 </Link>
                             )}
+                            {role !== 'admin' && role !== 'receivers' && (
+                                <Link to="/notices" className="nav-link">
+                                    <i className="fas fa-user"></i> Notices
+                                </Link>
+                            )}
                             <button className="nav-button logout-btn" onClick={handleLogout}>
                                 <i className="fas fa-sign-out-alt"></i> Logout
                             </button>
