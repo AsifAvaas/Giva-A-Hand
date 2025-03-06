@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
@@ -26,10 +27,23 @@ Route::post('/doctor/profile', [ProfileController::class, 'getDoctorProfile']);
 Route::put('/doctor/profile', [ProfileController::class, 'updateDoctorProfile']);
 Route::post('/admin/profile', [ProfileController::class, 'getAdminProfile']);
 Route::put('/admin/profile', [ProfileController::class, 'updateAdminProfile']);
-Route::put('/admin/approve', [ProfileController::class, 'approveUser']);
+Route::put('/admin/approve/{status}', [ProfileController::class, 'approveUser']);
 
 
 Route::get('/allUsers', [UserController::class, 'getAllUsers']);
 Route::get('/volunteers/users', [UserController::class, 'getVolunteers']);
 Route::get('/doctors/users', [UserController::class, 'getDoctors']);
 Route::get('/donors/users', [UserController::class, 'getDonors']);
+
+
+
+
+Route::post('/request', [RequestController::class, 'Request']);
+Route::put('/request/approve', [RequestController::class, 'ApproveRequest']);
+Route::post('/request/user', [RequestController::class, 'UserRequest']);
+Route::post('/request/helper', [RequestController::class, 'HelperRequest']);
+
+
+
+
+
