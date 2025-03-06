@@ -7,14 +7,14 @@ router.get('/allUsers', async (req, res) => {
     try {
 
 
-        const sql1 = "SELECT users.user_id, name, email, phone,address, approved, (SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills,(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability FROM users WHERE user_id IN (SELECT user_id FROM volunteers)"
+        const sql1 = "SELECT users.user_id, name, email,profile_pic, phone,address, approved, (SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills,(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability FROM users WHERE user_id IN (SELECT user_id FROM volunteers)"
         const [volunteers] = await db.promise().query(sql1)
 
-        const sql2 = "select users.user_id, name,email,phone,address,approved, specialization,freeTime, chamber_Location  from users inner join doctors on users.user_id=doctors.user_id"
+        const sql2 = "select users.user_id, name,email,phone,profile_pic,address,approved, specialization,freeTime, chamber_Location  from users inner join doctors on users.user_id=doctors.user_id"
 
         const [doctors] = await db.promise().query(sql2)
 
-        const sql3 = "select users.user_id, name,email,phone,address,approved, blood_group ,last_donation from users inner join blood_donors on users.user_id=blood_donors.user_id"
+        const sql3 = "select users.user_id, name,email,phone,profile_pic,address,approved, blood_group ,last_donation from users inner join blood_donors on users.user_id=blood_donors.user_id"
         const [bloodDonors] = await db.promise().query(sql3)
 
         return res.status(201).json({ success: true, volunteers, doctors, bloodDonors })
@@ -28,7 +28,11 @@ router.get('/allUsers', async (req, res) => {
 
 router.get('/volunteers/users', async (req, res) => {
     try {
-        const sql1 = "SELECT users.user_id, name, email, phone,address, (SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills,(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability FROM users WHERE user_id IN (SELECT user_id FROM volunteers) and users.approved=true"
+        const sql1 = `SELECT users.user_id, name, email, phone,address,profile_pic,
+        (SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills,
+        (SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability,
+        (SELECT volunteer_id FROM volunteers WHERE volunteers.user_id = users.user_id) AS volunteer_id
+         FROM users WHERE user_id IN (SELECT user_id FROM volunteers) and users.approved=true`
         const [volunteers] = await db.promise().query(sql1)
         return res.status(201).json({ success: true, volunteers })
 
@@ -41,7 +45,11 @@ router.get('/volunteers/users', async (req, res) => {
 router.get('/doctors/users', async (req, res) => {
 
     try {
-        const sql2 = "select users.user_id, name,email,phone,address, specialization,freeTime, chamber_Location  from users inner join doctors on users.user_id=doctors.user_id where approved=true"
+        const sql2 = `select users.user_id, name,email,phone,address,profile_pic,
+         specialization,freeTime,doctor_id, chamber_Location 
+          from users inner join doctors on 
+          users.user_id=doctors.user_id
+           where approved=true`
 
         const [doctors] = await db.promise().query(sql2)
         return res.status(201).json({ success: true, doctors })
@@ -57,7 +65,10 @@ router.get('/donors/users', async (req, res) => {
 
     try {
 
-        const sql3 = "select users.user_id, name,email,phone,address, blood_group ,last_donation from users inner join blood_donors on users.user_id=blood_donors.user_id where approved=true"
+        const sql3 = `select users.user_id, name,email,phone,address,profile_pic,
+        blood_donor_id, blood_group ,last_donation
+         from users inner join blood_donors on users.user_id=blood_donors.user_id
+          where approved=true`
         const [bloodDonors] = await db.promise().query(sql3)
         return res.status(201).json({ success: true, bloodDonors })
     } catch (error) {

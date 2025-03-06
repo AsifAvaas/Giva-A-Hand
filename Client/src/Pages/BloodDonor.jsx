@@ -3,6 +3,7 @@ import Navbar from '../Components/Navbar';
 import axios from 'axios';
 
 function BloodDonor() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [donors, setDonors] = useState([]);
     const [selectedDonor, setSelectedDonor] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +14,7 @@ function BloodDonor() {
 
     useEffect(() => {
         axios
-            .get('http://localhost:8000/api/donors/users')
+            .get(`${backend}/api/donors/users`)
             .then((response) => {
                 setDonors(response.data.bloodDonors);
                 console.log(response.data.bloodDonors);
@@ -50,7 +51,7 @@ function BloodDonor() {
         setSuccess(null);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/request', {
+            const response = await axios.post(`${backend}/api/request`, {
                 seeker_id: localStorage.getItem('userID'),
                 helper_id: selectedDonor.blood_donor_id,
                 helper_type: 'blood_donors',
@@ -82,6 +83,7 @@ function BloodDonor() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {donors.map((donor) => (
                                 <div key={donor.user_id} className="bg-white shadow-md rounded-lg p-6 border border-gray-300 transition-transform transform hover:scale-105 duration-300">
+                                    <img src={donor.profile_pic} alt="Photo" />
                                     <h3 className="text-xl font-semibold mb-2 text-gray-900">{donor.name}</h3>
                                     <p className="text-gray-700">
                                         <strong>Email:</strong> {donor.email}

@@ -3,6 +3,7 @@ import Navbar from '../Components/Navbar';
 import axios from 'axios';
 
 function VolunteerPage() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [volunteers, setVolunteers] = useState([]);
     const [selectedVolunteer, setSelectedVolunteer] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -13,7 +14,7 @@ function VolunteerPage() {
 
     useEffect(() => {
         axios
-            .get('http://localhost:8000/api/volunteers/users')
+            .get(`${backend}/api/volunteers/users`)
             .then((response) => {
                 setVolunteers(response.data.volunteers);
                 console.log(response.data.volunteers);
@@ -50,7 +51,7 @@ function VolunteerPage() {
         setSuccess(null);
 
         try {
-            const response = await axios.post('http://localhost:8000/api/request', {
+            const response = await axios.post(`${backend}/api/request`, {
                 seeker_id: localStorage.getItem('userID'),
                 helper_id: selectedVolunteer.volunteer_id,
                 helper_type: 'volunteers',
@@ -82,6 +83,7 @@ function VolunteerPage() {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {volunteers.map((volunteer) => (
                                 <div key={volunteer.user_id} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
+                                    <img src={volunteer.profile_pic} alt="profile photo" />
                                     <h3 className="text-xl font-semibold mb-2">{volunteer.name}</h3>
                                     <p className="text-gray-700">
                                         <strong>Email:</strong> {volunteer.email}

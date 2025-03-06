@@ -6,6 +6,7 @@ import '../styles/navbar.css';
 function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const token = localStorage.getItem('token');
+    const role = localStorage.getItem('role');
     const userId = localStorage.getItem('userID');
 
     const handleLogout = async () => {
@@ -57,6 +58,16 @@ function Navbar() {
                             {userId && (
                                 <Link to="/profile" className="nav-link">
                                     <i className="fas fa-user"></i> Profile
+                                </Link>
+                            )}
+                            {role === 'admin' && (
+                                <Link to="/dashboard" className="nav-link">
+                                    <i className="fas fa-user"></i> DashBoard
+                                </Link>
+                            )}
+                            {role !== 'admin' && role !== 'receivers' && (
+                                <Link to="/notices" className="nav-link">
+                                    <i className="fas fa-user"></i> Notices
                                 </Link>
                             )}
                             <button className="nav-button logout-btn" onClick={handleLogout}>
