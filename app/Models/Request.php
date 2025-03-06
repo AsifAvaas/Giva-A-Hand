@@ -26,20 +26,7 @@ class Request extends Model
         return $this->belongsTo(User::class, 'seeker_id', 'user_id');
     }
 
-    // Polymorphic Relationship: Helper (Volunteer, Doctor, Blood Donor)
-    // public function helper()
-    // {
-    //     switch ($this->helper_type) {
-    //         case 'volunteers':
-    //             return $this->belongsTo(Volunteer::class, 'helper_id', 'volunteer_id');
-    //         case 'doctors':
-    //             return $this->belongsTo(Doctor::class, 'helper_id', 'doctor_id');
-    //         case 'blood_donors':
-    //             return $this->belongsTo(BloodDonor::class, 'helper_id', 'blood_donor_id');
-    //         default:
-    //             return null;
-    //     }
-    // }
+
     public function volunteer()
     {
         return $this->belongsTo(Volunteer::class, 'helper_id', 'volunteer_id');

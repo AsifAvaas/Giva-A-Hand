@@ -5,19 +5,21 @@ import '../styles/adminPage.css';
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts';
 
 function AdminPage() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const adminId = localStorage.getItem('adminId');
     const [volunteer, setVolunteer] = useState([]);
     const [doctor, setDoctor] = useState([]);
     const [donor, setDonor] = useState([]);
     const fetchUsers = async () => {
         try {
-            const response = await axios.get('http://127.0.0.1:8000/api/allUsers');
+            const response = await axios.get(`${backend}/api/allUsers`);
             if (response.status === 201) {
                 setDoctor(response.data.doctors);
                 setVolunteer(response.data.volunteers);
                 setDonor(response.data.bloodDonors);
             } else {
                 console.log('server error');
+                console.log(response.data);
             }
         } catch (error) {
             console.log(error);
@@ -30,7 +32,7 @@ function AdminPage() {
     const handleChange = async (id, status) => {
         try {
             console.log(id, status);
-            const response = await axios.put(`http://127.0.0.1:8000/api/admin/approve/${status}`, { admin_id: adminId, user_Id: id });
+            const response = await axios.put(`${backend}/api/admin/approve/${status}`, { admin_id: adminId, user_Id: id });
             if (response.status === 201) {
                 fetchUsers();
             } else {
@@ -54,6 +56,7 @@ function AdminPage() {
                                     {volunteer.map((vol) => (
                                         <div key={vol.user_id} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
                                             <h3 className="text-xl font-semibold mb-2">{vol.name}</h3>
+                                            <img src={vol.profile_pic} alt="profile pic of volunteer" />
                                             <p className="text-gray-700">
                                                 <strong>Email:</strong> {vol.email}
                                             </p>
@@ -125,6 +128,7 @@ function AdminPage() {
                                     {doctor.map((doc) => (
                                         <div key={doc.user_id} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
                                             <h3 className="text-xl font-semibold mb-2">{doc.name}</h3>
+                                            <img src={doc.profile_pic} alt="profile pic of Doctor" />
                                             <p className="text-gray-700">
                                                 <strong>Email:</strong> {doc.email}
                                             </p>
@@ -196,6 +200,7 @@ function AdminPage() {
                                     {donor.map((don) => (
                                         <div key={don.user_id} className="bg-white shadow-lg rounded-lg p-6 border border-gray-200">
                                             <h3 className="text-xl font-semibold mb-2">{don.name}</h3>
+                                            <img src={don.profile_pic} alt="profile pic of Blood Donor" />
                                             <p className="text-gray-700">
                                                 <strong>Email:</strong> {don.email}
                                             </p>
