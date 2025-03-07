@@ -3,17 +3,18 @@ import Navbar from '../Components/Navbar';
 import axios from 'axios';
 
 function Notices() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [notices, setNotices] = useState([]);
     const userId = localStorage.getItem('userID');
     const fetchNotices = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/notice');
+            const response = await axios.get(`${backend}/api/notice`);
 
             if (response.status === 201) {
                 setNotices(response.data.data);
                 console.log(response.data.data);
             } else {
-                console.error(data.error);
+                console.error('Error');
             }
         } catch (error) {
             console.error(error);
@@ -26,8 +27,9 @@ function Notices() {
 
     const handleJoin = async (notice_id) => {
         console.log(notice_id);
+        console.log(userId);
         try {
-            const response = await axios.post('http://localhost:8000/api/noticeGet', {
+            const response = await axios.post(`${backend}/api/noticeGet`, {
                 notice_id,
                 user_id: userId,
             });
@@ -36,6 +38,7 @@ function Notices() {
                 console.log(response.data);
                 alert("You've joined the cause");
             } else {
+                console.error('Error joining the cause');
                 console.error(response.data.error);
             }
         } catch (error) {

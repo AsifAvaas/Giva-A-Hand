@@ -24,6 +24,7 @@ class AdminController extends Controller
 
         return response()->json([
             'success' => true,
+
             'message' => $result['message'],
             'adminId' => $result['adminId'],
         ], 201);
@@ -39,6 +40,7 @@ class AdminController extends Controller
 
         return response()->json([
             'success' => true,
+            'role' => 'admin',
             'message' => $result['message'],
             'adminId' => $result['adminId'],
             'token' => $result['token'],

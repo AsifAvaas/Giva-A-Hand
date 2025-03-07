@@ -45,7 +45,7 @@ class NoticeService
 
     public function getNoticeById($id)
     {
-        $result = DB::select("SELECT n.notice_id, n.notice_title, n.notice_message, n.notice_pic, u.user_id, u.name, u.email, u.phone, u.role FROM notices n LEFT JOIN notice_users nu ON n.notice_id = nu.notice_id LEFT JOIN users u ON nu.user_id = u.user_id WHERE n.notice_id = ?", [$id]);
+        $result = DB::select("SELECT n.notice_id, n.notice_title, n.notice_message, n.notice_pic, u.user_id, u.name, u.email, u.phone, u.role FROM notice n LEFT JOIN notice_users nu ON n.notice_id = nu.notice_id LEFT JOIN users u ON nu.user_id = u.user_id WHERE n.notice_id = ?", [$id]);
 
         if (empty($result)) {
             return ['error' => 'Notice not found or no users joined'];
@@ -56,7 +56,7 @@ class NoticeService
             'notice_title' => $result[0]->notice_title,
             'notice_message' => $result[0]->notice_message,
             'notice_pic' => $result[0]->notice_pic,
-            'users' => array_filter(array_map(function($user) {
+            'users' => array_filter(array_map(function ($user) {
                 return $user->user_id ? [
                     'user_id' => $user->user_id,
                     'name' => $user->name,

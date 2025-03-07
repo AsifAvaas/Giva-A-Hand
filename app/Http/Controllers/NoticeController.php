@@ -16,27 +16,27 @@ class NoticeController extends Controller
 
     public function createNotice(Request $request)
     {
-        return response()->json($this->noticeService->createNotice($request->admin_id, $request->notice_title, $request->notice_message, $request->notice_pic));
+        return response()->json($this->noticeService->createNotice($request->admin_id, $request->notice_title, $request->notice_message, $request->notice_pic), 201);
     }
 
     public function updateNotice(Request $request, $noticeId)
     {
-        return response()->json($this->noticeService->updateNotice($noticeId, $request->admin_id, $request->notice_title, $request->notice_message, $request->notice_pic));
+        return response()->json($this->noticeService->updateNotice($noticeId, $request->admin_id, $request->notice_title, $request->notice_message, $request->notice_pic), 201);
     }
 
     public function getAllNotices()
     {
-        return response()->json(['success' => true, 'data' => $this->noticeService->getAllNotices()]);
+        return response()->json(['success' => true, 'data' => $this->noticeService->getAllNotices()], 201);
     }
 
     public function getNoticeById($id)
     {
-        return response()->json(['success' => true, 'data' => $this->noticeService->getNoticeById($id)]);
+        return response()->json(['success' => true, 'data' => $this->noticeService->getNoticeById($id)], 201);
     }
 
     public function addUserToNotice(Request $request)
     {
-        return response()->json($this->noticeService->addUserToNotice($request->notice_id, $request->user_id));
+        return response()->json($this->noticeService->addUserToNotice($request->notice_id, $request->user_id), 201);
     }
 }
 
