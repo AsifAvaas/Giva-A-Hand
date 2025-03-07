@@ -118,3 +118,89 @@
     margin: 0.5rem 0;
   }
 }
+
+
+.notification-container {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-icon {
+  background: none;
+  border: none;
+  font-size: 1.8rem; /* Adjust for better visibility */
+  cursor: pointer;
+  color: white;
+  position: relative; /* Ensures the badge positions relative to the icon */
+}
+
+.notification-badge {
+  position: absolute;
+   top: -5px;
+  right: -15px; 
+  background: red;
+  color: white;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 50%;
+  font-weight: bold;
+  z-index: 10; /* Ensures it stays visible */
+  min-width: 18px; /* Make it more circular */
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  width: 250px;
+  max-height: 300px; /* Adjust the height as needed */
+  overflow-y: auto; /* Enables scrolling when content overflows */
+  border-radius: 5px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  z-index: 1000;
+}
+
+/* Optional: Style the scrollbar */
+.notification-dropdown::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-dropdown::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 5px;
+}
+
+.notification-dropdown::-webkit-scrollbar-track {
+  background-color: #f1f1f1;
+}
+
+
+.notification-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #333;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+
+.see-all-btn {
+  display: block;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
+  color: blue;
+  text-decoration: none;
+}
+
+.see-all-btn:hover {
+  text-decoration: underline;
+}

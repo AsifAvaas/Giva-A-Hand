@@ -1,25 +1,50 @@
 <?php
 namespace App\Services;
 
+use App\Models\User;
+use App\Notifications\NoticeNotification;
 use Illuminate\Support\Facades\DB;
 
 class NoticeService
 {
     public function createNotice($adminId, $noticeTitle, $noticeMessage, $noticePic)
     {
+        // Check if admin exists
         $admin = DB::table('admins')->where('admin_id', $adminId)->first();
         if (!$admin) {
             return ['error' => 'Invalid admin_id'];
         }
 
-        DB::table('notice')->insert([
+        // Insert notice and get its ID
+        $noticeId = DB::table('notice')->insertGetId([
             'admin_id' => $adminId,
             'notice_title' => $noticeTitle,
             'notice_message' => $noticeMessage,
             'notice_pic' => $noticePic,
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
-        return ['success' => true, 'message' => 'Notice posted successfully'];
+        // Fetch the inserted notice
+        $notice = [
+            'id' => $noticeId,
+            'admin_id' => $adminId,
+            'notice_title' => $noticeTitle,
+            'notice_message' => $noticeMessage,
+            'notice_pic' => $noticePic,
+        ];
+
+        // Get all users and send notifications
+        $users = User::where('role', '!=', 'receivers')->get();
+        foreach ($users as $user) {
+            $user->notify(new NoticeNotification($notice));
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Notice posted successfully',
+            'data' => $notice
+        ];
     }
 
     public function updateNotice($noticeId, $adminId, $noticeTitle, $noticeMessage, $noticePic)

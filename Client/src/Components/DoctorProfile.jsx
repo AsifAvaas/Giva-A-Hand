@@ -60,7 +60,7 @@ function DoctorProfile() {
     return (
         <div className="container mx-auto p-4">
             <div className="bg-white p-6 rounded-lg">
-                <h1 className="text-2xl">Blood Donor Information</h1>
+                <h1 className="text-2xl">Doctor Information</h1>
                 <div className="text-lg mb-2">
                     <span className="font-semibold">Field of specialization:</span>
                     {isEditing ? <input type="text" name="specialization" value={form.specialization || ''} onChange={handleChange} className="ml-2 p-2 border rounded" /> : <span> {doctor.specialization}</span>}

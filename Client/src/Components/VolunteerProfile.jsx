@@ -59,7 +59,7 @@ function VolunteerProfile() {
     return (
         <div className="container mx-auto p-4">
             <div className="bg-white p-6 rounded-lg">
-                <h1 className="text-2xl">Blood Donor Information</h1>
+                <h1 className="text-2xl">Volunteer Information</h1>
                 <div className="text-lg mb-2">
                     <span className="font-semibold">Skills:</span>
                     {isEditing ? <input type="text" name="skills" value={form.skills || ''} onChange={handleChange} className="ml-2 p-2 border rounded" /> : <span> {volunteer.skills}</span>}

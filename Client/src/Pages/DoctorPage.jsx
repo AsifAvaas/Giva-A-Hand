@@ -65,6 +65,7 @@ function DoctorPage() {
                 setIsModalOpen(false);
                 setMessage('');
             } else {
+                console.log(response.data);
                 setError('Failed to send message. Try again.');
                 console.log('Failed to send message. Try again.');
             }

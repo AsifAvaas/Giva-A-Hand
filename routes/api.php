@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -51,6 +52,12 @@ Route::get('/notice', [NoticeController::class, 'getAllNotices']);
 Route::get('/notice/{id}', [NoticeController::class, 'getNoticeById']);
 Route::post('/noticeGet', [NoticeController::class, 'addUserToNotice']);
 
+
+
+Route::post('/notifications/unread', [NotificationController::class, 'getUnreadNotifications']);
+Route::post('/notifications/all', [NotificationController::class, 'getAllNotifications']);
+Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead']);
+Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
 
 
 

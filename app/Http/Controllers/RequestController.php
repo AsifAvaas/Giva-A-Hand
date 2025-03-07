@@ -4,15 +4,19 @@ namespace App\Http\Controllers;
 
 use App\Models\BloodDonor;
 use App\Models\Doctor;
+use App\Models\User;
 use App\Models\Volunteer;
 use DB;
 use Illuminate\Http\Request;
+use App\Notifications\RequestApprovedNotification;
+use App\Notifications\RequestNotification;
 use Validator;
 
 class RequestController extends Controller
 {
     public function Request(Request $request)
     {
+        // Validate input
         $validator = Validator::make($request->all(), [
             'seeker_id' => 'required|integer',
             'helper_id' => 'required|integer',
@@ -23,6 +27,7 @@ class RequestController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 400);
         }
+
         // Map helper_type to the correct model and ID field
         $helperModels = [
             'volunteers' => ['model' => Volunteer::class, 'id_column' => 'volunteer_id'],
@@ -38,23 +43,44 @@ class RequestController extends Controller
         if (!$helperModel::where($idColumn, $request->helper_id)->exists()) {
             return response()->json(['success' => false, 'message' => 'Helper not found'], 404);
         }
-
-        // Create Request
         $helpRequest = \App\Models\Request::create([
             'seeker_id' => $request->seeker_id,
             'helper_id' => $request->helper_id,
             'helper_type' => $helperType,
             'message' => $request->message,
         ]);
+        $helperRecord = $helperModel::where($idColumn, $request->helper_id)->first();
+
+        if (!$helperRecord) {
+            return response()->json(['success' => false, 'message' => 'Helper not found'], 404);
+        }
+        $helperUserId = $helperRecord->user_id;
+
+
+        // Find sender (seeker)
+        $sender = User::where('user_id', $request->seeker_id)->first();
+
+        if (!$sender) {
+            return response()->json(['message' => 'Seeker not found'], 404);
+        }
+
+        // Find the helper in the Users table
+        $helperUser = User::where('user_id', $helperUserId)->first();
+
+        if (!$helperUser) {
+            return response()->json(['message' => 'Helper User not found'], 404);
+        }
+
+        // Send notification to the correct User
+        $helperUser->notify(new RequestNotification($helpRequest, $sender));
 
         return response()->json([
             'success' => true,
             'message' => 'Request sent successfully',
             'data' => $helpRequest
         ], 201);
-
-
     }
+
 
     public function ApproveRequest(Request $request)
     {
@@ -76,20 +102,52 @@ class RequestController extends Controller
             return response()->json(['success' => false, 'message' => 'Request not found'], 404);
         }
 
-        // Check if the approver_id matches the helper_id
-        if ($helpRequest->helper_id != $request->approver_id) {
-            return response()->json(['success' => false, 'message' => 'You are not authorized to approve or disapprove this request'], 403);
+        // Determine the helper type and fetch the corresponding record
+        $helperModels = [
+            'volunteers' => ['model' => Volunteer::class, 'id_column' => 'volunteer_id'],
+            'doctors' => ['model' => Doctor::class, 'id_column' => 'doctor_id'],
+            'blood_donors' => ['model' => BloodDonor::class, 'id_column' => 'blood_donor_id'],
+        ];
+
+        $helperType = $helpRequest->helper_type; // This should be stored in the `requests` table
+        if (!isset($helperModels[$helperType])) {
+            return response()->json(['success' => false, 'message' => 'Invalid helper type'], 400);
+        }
+
+        $helperModel = $helperModels[$helperType]['model'];
+        $idColumn = $helperModels[$helperType]['id_column'];
+
+        // Find the helper record
+        $helperRecord = $helperModel::where($idColumn, $request->approver_id)->first();
+
+        if (!$helperRecord) {
+            return response()->json(['success' => false, 'message' => 'Approver not found'], 404);
+        }
+
+        // Fetch the user associated with the helper
+        $approverUser = User::where('user_id', $helperRecord->user_id)->first();
+
+        if (!$approverUser) {
+            return response()->json(['success' => false, 'message' => 'Approver user not found'], 404);
         }
 
         // Update the status of the request (approved or disapproved)
         $update = DB::table('requests')
             ->where('request_id', $request->request_id)
             ->update([
-                'status' => $request->status,  // 'approved' or 'disapproved'
+                'status' => $request->status,
                 'updated_at' => now()
             ]);
 
         if ($update) {
+            $seeker = User::where('user_id', $helpRequest->seeker_id)->first();
+
+            if ($seeker) {
+                $seeker->notify(new RequestApprovedNotification($helpRequest, $approverUser));
+            } else {
+                return response()->json(['success' => false, 'message' => 'Seeker not found'], 404);
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Request status updated successfully',
@@ -105,6 +163,7 @@ class RequestController extends Controller
             'message' => 'Failed to update the request status'
         ], 500);
     }
+
 
     public function UserRequest(Request $request)
     {
@@ -132,7 +191,7 @@ class RequestController extends Controller
             }
 
             if ($helperData && isset($helperData->user_id)) {
-                $user = \App\Models\User::select('name', 'phone', 'email', 'profile_pic')
+                $user = User::select('name', 'phone', 'email', 'profile_pic')
                     ->where('user_id', $helperData->user_id)
                     ->first();
             } else {
