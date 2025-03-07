@@ -174,6 +174,7 @@ return [
         App\Providers\AdminServiceProvider::class,
         App\Providers\ProfileServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
+        App\Providers\NoticeServiceProvider::class,
     ],
 
     /*
