@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../styles/navbar.css';
 
 function Navbar() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [notifications, setNotifications] = useState([]);
     const [unreadCount, setUnreadCount] = useState(0);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -23,7 +24,7 @@ function Navbar() {
             }
 
             await axios.post(
-                'http://localhost:8000/api/logout',
+                `${backend}/api/logout`,
                 {},
                 {
                     headers: {
@@ -43,7 +44,7 @@ function Navbar() {
 
     const fetchNotifications = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/notifications/unread', { user_id: userId });
+            const response = await axios.post(`${backend}/api/notifications/unread`, { user_id: userId });
             setNotifications(response.data.notifications);
             setUnreadCount(response.data.notifications.length);
         } catch (error) {
@@ -53,7 +54,7 @@ function Navbar() {
 
     const fetchAllNotifications = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/notifications/all', { user_id: userId });
+            const response = await axios.post(`${backend}/api/notifications/all`, { user_id: userId });
             const notifications = response.data.notifications;
             setNotifications(notifications);
             setUnreadCount(0);
@@ -71,7 +72,7 @@ function Navbar() {
 
         if (!showDropdown && unreadCount > 0) {
             try {
-                await axios.post('http://localhost:8000/api/notifications/read-all', { user_id: userId });
+                await axios.post(`${backend}/api/notifications/read-all`, { user_id: userId });
                 setUnreadCount(0);
             } catch (error) {
                 console.error('Error marking notifications as read:', error);

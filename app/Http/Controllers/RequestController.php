@@ -199,6 +199,7 @@ class RequestController extends Controller
             }
 
             return [
+                'request_id' => $request->request_id,  // Adding request_id to the response
                 'message' => $request->message,
                 'status' => $request->status,
                 'helper_data' => $user,
@@ -256,5 +257,47 @@ class RequestController extends Controller
         ], 201);
     }
 
+    public function RequestById($id)
+    {
+        // Find the request by ID
+        $helpRequest = \App\Models\Request::with(['volunteer', 'doctor', 'bloodDonor'])
+            ->where('request_id', $id)
+            ->first();
+
+        if (!$helpRequest) {
+            return response()->json(['success' => false, 'message' => 'Request not found'], 404);
+        }
+
+        // Determine the helper's details
+        $helperData = null;
+        if ($helpRequest->helper_type == 'volunteers' && $helpRequest->volunteer) {
+            $helperData = $helpRequest->volunteer;
+        } elseif ($helpRequest->helper_type == 'doctors' && $helpRequest->doctor) {
+            $helperData = $helpRequest->doctor;
+        } elseif ($helpRequest->helper_type == 'blood_donors' && $helpRequest->bloodDonor) {
+            $helperData = $helpRequest->bloodDonor;
+        }
+
+        // Get user details of the helper
+        $helperUser = $helperData ? User::select('user_id', 'name', 'phone', 'email', 'profile_pic')
+            ->where('user_id', $helperData->user_id)
+            ->first() : null;
+
+        // Get seeker details
+        $seekerUser = User::select('user_id', 'name', 'phone', 'email', 'profile_pic')
+            ->where('user_id', $helpRequest->seeker_id)
+            ->first();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'request_id' => $helpRequest->request_id,
+                'message' => $helpRequest->message,
+                'status' => $helpRequest->status,
+                'seeker' => $seekerUser,
+                'helper' => $helperUser
+            ]
+        ], 201);
+    }
 
 }

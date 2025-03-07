@@ -49,8 +49,10 @@ class ProfileService
     public function updateVolunteerProfile(Request $request)
     {
         $userId = $request->input('user_Id');
-        $result = DB::update('UPDATE volunteers SET skills = ?, availability = ? WHERE user_id = ?',
-            [$request->input('skills'), $request->input('availability'), $userId]);
+        $result = DB::update(
+            'UPDATE volunteers SET skills = ?, availability = ? WHERE user_id = ?',
+            [$request->input('skills'), $request->input('availability'), $userId]
+        );
         return $result
             ? response()->json(['success' => true, 'message' => 'Volunteer profile updated'], 201)
             : response()->json(['success' => false, 'message' => 'Profile update failed'], 500);
@@ -68,8 +70,10 @@ class ProfileService
     public function updateBloodDonorProfile(Request $request)
     {
         $userId = $request->input('user_Id');
-        $result = DB::update('UPDATE blood_donors SET blood_group = ?, last_donation = ? WHERE user_id = ?',
-            [$request->input('blood_group'), $request->input('last_donation'), $userId]);
+        $result = DB::update(
+            'UPDATE blood_donors SET blood_group = ?, last_donation = ? WHERE user_id = ?',
+            [$request->input('blood_group'), $request->input('last_donation'), $userId]
+        );
         return $result
             ? response()->json(['success' => true, 'message' => 'Blood donor profile updated'], 201)
             : response()->json(['success' => false, 'message' => 'Profile update failed'], 500);
@@ -87,8 +91,10 @@ class ProfileService
     public function updateDoctorProfile(Request $request)
     {
         $userId = $request->input('user_Id');
-        $result = DB::update('UPDATE doctors SET specialization = ?, free_time = ?, chamber_location = ? WHERE user_id = ?',
-            [$request->input('specialization'), $request->input('freeTime'), $request->input('chamber_Location'), $userId]);
+        $result = DB::update(
+            'UPDATE doctors SET specialization = ?, freeTime = ?, chamber_location = ? WHERE user_id = ?',
+            [$request->input('specialization'), $request->input('freeTime'), $request->input('chamber_Location'), $userId]
+        );
         return $result
             ? response()->json(['success' => true, 'message' => 'Doctor profile updated'], 201)
             : response()->json(['success' => false, 'message' => 'Profile update failed'], 500);
@@ -105,8 +111,10 @@ class ProfileService
         if ($validator->fails()) {
             return response()->json(['success' => false, 'message' => $validator->errors()->first()], 400);
         }
-        $result = DB::update('UPDATE admins SET name = ?, email = ?, password = ? WHERE admin_id = ?',
-            [$request->input('name'), $request->input('email'), bcrypt($request->input('password')), $request->input('admin_id')]);
+        $result = DB::update(
+            'UPDATE admins SET name = ?, email = ?, password = ? WHERE admin_id = ?',
+            [$request->input('name'), $request->input('email'), bcrypt($request->input('password')), $request->input('admin_id')]
+        );
         return $result
             ? response()->json(['success' => true, 'message' => 'Admin Updated'], 201)
             : response()->json(['success' => false, 'message' => 'Update failed'], 500);
