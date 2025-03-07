@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\RequestController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
@@ -43,6 +44,12 @@ Route::put('/request/approve', [RequestController::class, 'ApproveRequest']);
 Route::post('/request/user', [RequestController::class, 'UserRequest']);
 Route::post('/request/helper', [RequestController::class, 'HelperRequest']);
 
+
+Route::post('/notice', [NoticeController::class, 'createNotice']);
+Route::put('/notice/{notice_id}', [NoticeController::class, 'updateNotice']);
+Route::get('/notice', [NoticeController::class, 'getAllNotices']);
+Route::get('/notice/{id}', [NoticeController::class, 'getNoticeById']);
+Route::post('/noticeGet', [NoticeController::class, 'addUserToNotice']);
 
 
 
