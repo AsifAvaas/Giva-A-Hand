@@ -13,7 +13,7 @@ function NoticeBoard() {
         try {
             const response = await axios.get(`http://localhost:8000/api/notice/${id}`);
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 setNotice(response.data.data);
             } else {
                 setError('Failed to fetch notice');

@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 function Admin() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [notices, setNotices] = useState([]);
     const navigate = useNavigate();
     const fetchNotices = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/api/notice');
+            const response = await axios.get(`${backend}/api/notice`);
 
             if (response.status === 201) {
                 setNotices(response.data.data);
