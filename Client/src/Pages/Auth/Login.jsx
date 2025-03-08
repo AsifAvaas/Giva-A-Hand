@@ -15,16 +15,18 @@ function Login() {
             const response = await axios.post('http://localhost:8000/api/login', { email, password });
             if (response.status === 201) {
                 setMsg('Login successful');
+                console.log(response.data);
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('userID', response.data.userId);
                 localStorage.setItem('role', response.data.role);
+                localStorage.setItem('helperId', response.data.helperId);
 
                 navigate('/');
             } else {
                 setError('Invalid credentials');
             }
 
-            console.log(role);
+            console.log(response.data.role);
             console.log('Email:', email);
             console.log('Password:', password);
         } catch (error) {

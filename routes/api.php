@@ -1,42 +1,70 @@
 <?php
-
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\BloodDonorController;
-use App\Http\Controllers\RecieverController;
-use App\Http\Controllers\TestController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\NoticeController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\RequestController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\VolunteerInfoController;
-use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-Route::post("/register", [RegisterController::class, "register"]);
-// Route::post("/login", [LoginController::class, "login"]);
-Route::middleware([EnsureFrontendRequestsAreStateful::class])->post('/login', [LoginController::class, 'login']);
-Route::post("/logout", [LoginController::class, "logout"]);
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProfileController;
 
 
-Route::post("/profile", [UserController::class, "getProfile"]);
-Route::post("/updateProfile", [UserController::class, "updateProfile"]);
 
-Route::post('/admins/profile', [AdminController::class, 'getProfile']);
-Route::post('/admins/updateProfile', [AdminController::class, 'updateProfile']);
+Route::post('/admin/register', [AdminController::class, 'register']);
+Route::post('/admin/login', [AdminController::class, 'login']);
 
-// Route::post('/blood_donors/profile', [BloodDonorController::class, 'getProfile']);
-// Route::post('/blood_donors/updateProfile', [BloodDonorController::class, 'updateProfile']);
 
-// Route::post('/recievers/profile', [RecieverController::class, 'getProfile']);
-// Route::post('/recievers/updateProfile', [RecieverController::class, 'updateProfile']);
 
-// Route::post('/volunteer_infos/profile', [VolunteerInfoController::class, 'getProfile']);
-// Route::post('/volunteer_infos/updateProfile', [VolunteerInfoController::class, 'updateProfile']);
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::middleware('auth:sanctum')->post('logout', [AuthController::class, 'logout']);
+
+Route::post('/profile', [ProfileController::class, 'getProfile']);
+Route::put('/profile', [ProfileController::class, 'updateProfile']);
+Route::post('/volunteer/profile', [ProfileController::class, 'getVolunteerProfile']);
+Route::put('/volunteer/profile', [ProfileController::class, 'updateVolunteerProfile']);
+Route::post('/bloodDonor/profile', [ProfileController::class, 'getBloodDonorProfile']);
+Route::put('/bloodDonor/profile', [ProfileController::class, 'updateBloodDonorProfile']);
+Route::post('/doctor/profile', [ProfileController::class, 'getDoctorProfile']);
+Route::put('/doctor/profile', [ProfileController::class, 'updateDoctorProfile']);
+Route::post('/admin/profile', [ProfileController::class, 'getAdminProfile']);
+Route::put('/admin/profile', [ProfileController::class, 'updateAdminProfile']);
+Route::put('/admin/approve/{status}', [ProfileController::class, 'approveUser']);
+
+
+Route::get('/allUsers', [UserController::class, 'getAllUsers']);
+Route::get('/volunteers/users', [UserController::class, 'getVolunteers']);
+Route::get('/doctors/users', [UserController::class, 'getDoctors']);
+Route::get('/donors/users', [UserController::class, 'getDonors']);
+
+
+
+
+Route::post('/request', [RequestController::class, 'Request']);
+Route::put('/request/approve', [RequestController::class, 'ApproveRequest']);
+Route::post('/request/user', [RequestController::class, 'UserRequest']);
+Route::post('/request/helper', [RequestController::class, 'HelperRequest']);
+Route::get('/request/{id}', [RequestController::class, 'RequestById']);
+
+
+Route::post('/notice', [NoticeController::class, 'createNotice']);
+Route::put('/notice/{notice_id}', [NoticeController::class, 'updateNotice']);
+Route::get('/notice', [NoticeController::class, 'getAllNotices']);
+Route::get('/notice/{id}', [NoticeController::class, 'getNoticeById']);
+Route::post('/noticeGet', [NoticeController::class, 'addUserToNotice']);
+
+
+
+Route::post('/notifications/unread', [NotificationController::class, 'getUnreadNotifications']);
+Route::post('/notifications/all', [NotificationController::class, 'getAllNotifications']);
+Route::post('/notifications/read/{id}', [NotificationController::class, 'markAsRead']);
+Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead']);
+
+
+Route::post('/chat/start', [ChatController::class, 'startConversation']);
+Route::post('/chat/send', [ChatController::class, 'sendMessage']);
+Route::get('/chat/messages/{conversationId}', [ChatController::class, 'getMessages']);
+
+
+

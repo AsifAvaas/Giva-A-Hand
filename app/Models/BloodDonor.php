@@ -39,4 +39,10 @@ class BloodDonor extends Model
             $bloodDonor->blood_donor_id = $randomId; // Assign random ID
         });
     }
+
+    public function requests()
+    {
+        return $this->hasMany(Request::class, 'helper_id', 'blood_donor_id')
+            ->where('helper_type', 'blood_donors');
+    }
 }
