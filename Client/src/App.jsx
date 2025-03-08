@@ -1,4 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
+
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 import Home from './Pages/Home';
 import Login from './Pages/Auth/Login';
 import Signup from './Pages/Auth/Signup';
@@ -11,6 +14,7 @@ import BloodDonor from './Pages/BloodDonor';
 import NewNotice from './Pages/NewNotice';
 import Notices from './Pages/Notices';
 import NoticeBoard from './Pages/NoticeBoard';
+import RequestPage from './Pages/RequestPage';
 
 function App() {
     return (
@@ -27,6 +31,7 @@ function App() {
             <Route path="/newNotice" element={<NewNotice />} />
             <Route path="/notices" element={<Notices />} />
             <Route path="/notice/:id" element={<NoticeBoard />} />
+            <Route path="/request/:id" element={<RequestPage />} />
         </Routes>
     );
 }

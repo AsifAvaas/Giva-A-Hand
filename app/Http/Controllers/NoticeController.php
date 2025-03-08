@@ -16,7 +16,23 @@ class NoticeController extends Controller
 
     public function createNotice(Request $request)
     {
-        return response()->json($this->noticeService->createNotice($request->admin_id, $request->notice_title, $request->notice_message, $request->notice_pic), 201);
+        // Validate request
+        $request->validate([
+            'admin_id' => 'required|integer',
+            'notice_title' => 'required|string|max:255',
+            'notice_message' => 'required|string',
+            'notice_pic' => 'nullable|string',
+        ]);
+
+        // Call the service to create notice and send notifications
+        $response = $this->noticeService->createNotice(
+            $request->admin_id,
+            $request->notice_title,
+            $request->notice_message,
+            $request->notice_pic
+        );
+
+        return response()->json($response, 201);
     }
 
     public function updateNotice(Request $request, $noticeId)

@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 function BloodDonorProfile() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const userId = localStorage.getItem('userID');
     const [donor, setDonor] = useState({
         blood_group: '',
@@ -17,7 +18,7 @@ function BloodDonorProfile() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/bloodDonor/profile', { user_Id: userId });
+            const response = await axios.post(`${backend}/api/bloodDonor/profile`, { user_Id: userId });
             if (response.status === 201) {
                 const data = response.data.bloodDonor[0];
                 setDonor(data);
@@ -43,7 +44,7 @@ function BloodDonorProfile() {
         console.log('Updated Profile:', userId);
         console.log('Updated Profile:', form);
         try {
-            const response = await axios.put('http://localhost:8000/api/bloodDonor/profile', { user_Id: form.user_Id, blood_group: form.blood_group, last_donation: form.last_donation });
+            const response = await axios.put(`${backend}/api/bloodDonor/profile`, { user_Id: form.user_Id, blood_group: form.blood_group, last_donation: form.last_donation });
             if (response.status === 201) {
                 console.log('Profile updated successfully');
                 fetchData();
