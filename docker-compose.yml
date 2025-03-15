@@ -8,8 +8,6 @@ services:
         container_name: laravel_app
         ports:
             - '80:80'
-        volumes:
-            - .:/var/www/html
         networks:
             - laravel_network
         environment:
