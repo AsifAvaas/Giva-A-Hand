@@ -15,6 +15,7 @@ class CreateVolunteersTable extends Migration
     {
         Schema::create('volunteers', function (Blueprint $table) {
             $table->id('volunteer_id');
+
             $table->foreignId('user_id')->constrained('users', 'user_id')->onDelete('cascade');
             $table->text('skills')->nullable();
             $table->enum('availability', ['Full-Time', 'Part-Time', 'Occasional'])->default('Occasional');

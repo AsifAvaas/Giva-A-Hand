@@ -20,7 +20,7 @@ class CreateNoticeUsersTable extends Migration
             $table->timestamp('joined_at')->useCurrent();
 
             // Foreign keys
-            $table->foreign('notice_id')->references('notice_id')->on('notice')->onDelete('cascade');
+            $table->foreign('notice_id')->references('notice_id')->on('notices')->onDelete('cascade');
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
 
             // Unique constraint

@@ -13,9 +13,9 @@ class CreateNoticeTable extends Migration
      */
     public function up()
     {
-        Schema::create('notice', function (Blueprint $table) {
-            $table->bigIncrements('notice_id'); // Auto-increment primary key
-            $table->bigInteger('admin_id'); // Foreign key to admins
+        Schema::create('notices', function (Blueprint $table) {
+            $table->id('notice_id');
+            $table->unsignedBigInteger('admin_id');
             $table->string('notice_title');
             $table->text('notice_message');
             $table->string('notice_pic')->nullable(); // Nullable image path
@@ -33,6 +33,6 @@ class CreateNoticeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notice');
+        Schema::dropIfExists('notices');
     }
 }
