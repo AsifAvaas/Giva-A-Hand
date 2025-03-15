@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/navbar.css';
 
@@ -9,37 +9,39 @@ function Navbar() {
     const [unreadCount, setUnreadCount] = useState(0);
     const [showDropdown, setShowDropdown] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+    const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const role = localStorage.getItem('role');
     const userId = localStorage.getItem('userID');
 
     const handleLogout = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                console.warn('No token found. Redirecting to login.');
-                window.location.href = '/login';
-                return;
-            }
+        localStorage.clear();
+        navigate('/login');
+        //try {
+        //     const token = localStorage.getItem('token');
+        //     if (!token) {
+        //         console.warn('No token found. Redirecting to login.');
+        //         window.location.href = '/login';
+        //         return;
+        //     }
 
-            await axios.post(
-                `${backend}/api/logout`,
-                {},
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                },
-            );
+        //     await axios.post(
+        //         `${backend}/api/logout`,
+        //         {},
+        //         {
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`,
+        //             },
+        //         },
+        //     );
 
-            localStorage.clear();
-            window.location.href = '/login';
-        } catch (error) {
-            console.error('Logout failed:', error);
-            localStorage.clear();
-            window.location.href = '/login';
-        }
+        //     localStorage.clear();
+        //     window.location.href = '/login';
+        // } catch (error) {
+        //     console.error('Logout failed:', error);
+        //     localStorage.clear();
+        //     window.location.href = '/login';
+        // }
     };
 
     const fetchNotifications = async () => {

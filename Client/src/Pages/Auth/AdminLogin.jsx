@@ -59,12 +59,6 @@ function AdminLogin() {
                     >
                         Login
                     </button>
-                    <p className="text-sm text-center text-gray-600">
-                        Don't have an account?{' '}
-                        <a href="/signup" className="text-indigo-600 hover:underline">
-                            Sign Up
-                        </a>
-                    </p>
                 </form>
             </div>
         </div>
