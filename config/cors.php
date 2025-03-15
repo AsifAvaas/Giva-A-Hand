@@ -22,6 +22,7 @@ return [
     'allowed_origins' => ['*'],
     // 'allowed_origins' => [env('FRONTEND_URL', 'https://giva-a-hand-project.vercel.app')],
 
+
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
