@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: laravel_app
+        ports:
+            - '80:80'
+        networks:
+            - laravel_network
+        environment:
+            - APP_KEY=${APP_KEY}
+
+networks:
+    laravel_network:
+        driver: bridge

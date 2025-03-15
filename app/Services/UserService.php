@@ -16,6 +16,7 @@ class UserService
                     'users.email',
                     'users.phone',
                     'users.address',
+                    'users.profile_pic',
                     'users.approved',
                     DB::raw('(SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills'),
                     DB::raw('(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability')
@@ -27,12 +28,12 @@ class UserService
 
             $doctors = DB::table('users')
                 ->join('doctors', 'users.user_id', '=', 'doctors.user_id')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
+                ->select('users.user_id', 'users.profile_pic', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
                 ->get();
 
             $bloodDonors = DB::table('users')
                 ->join('blood_donors', 'users.user_id', '=', 'blood_donors.user_id')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved', 'blood_donors.blood_group', 'blood_donors.last_donation')
+                ->select('users.user_id', 'users.profile_pic', 'users.name', 'users.email', 'users.phone', 'users.address', 'users.approved', 'blood_donors.blood_group', 'blood_donors.last_donation')
                 ->get();
 
             return [
@@ -56,6 +57,7 @@ class UserService
                     'users.email',
                     'users.phone',
                     'users.address',
+                    'users.profile_pic',
                     DB::raw('(SELECT volunteer_id FROM volunteers WHERE volunteers.user_id = users.user_id) AS volunteer_id'),
                     DB::raw('(SELECT skills FROM volunteers WHERE volunteers.user_id = users.user_id) AS skills'),
                     DB::raw('(SELECT availability FROM volunteers WHERE volunteers.user_id = users.user_id) AS availability')
@@ -77,7 +79,7 @@ class UserService
         try {
             $doctors = DB::table('users')
                 ->join('doctors', 'users.user_id', '=', 'doctors.user_id')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'doctors.doctor_id', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
+                ->select('users.user_id', 'users.name', 'users.profile_pic', 'users.email', 'users.phone', 'users.address', 'doctors.doctor_id', 'doctors.specialization', 'doctors.freeTime', 'doctors.chamber_Location')
                 ->where('users.approved', true)
                 ->get();
 
@@ -92,7 +94,7 @@ class UserService
         try {
             $bloodDonors = DB::table('users')
                 ->join('blood_donors', 'users.user_id', '=', 'blood_donors.user_id')
-                ->select('users.user_id', 'users.name', 'users.email', 'users.phone', 'users.address', 'blood_donors.blood_donor_id', 'blood_donors.blood_group', 'blood_donors.last_donation')
+                ->select('users.user_id', 'users.name', 'users.profile_pic', 'users.email', 'users.phone', 'users.address', 'blood_donors.blood_donor_id', 'blood_donors.blood_group', 'blood_donors.last_donation')
                 ->where('users.approved', true)
                 ->get();
 
