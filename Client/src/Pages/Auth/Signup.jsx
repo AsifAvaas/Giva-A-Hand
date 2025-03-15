@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/auth.css';
 const Signup = () => {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
-        role: 'users',
+        role: 'receivers',
     });
 
     const handleChange = (e) => {
@@ -29,11 +30,10 @@ const Signup = () => {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:8000/api/register', formData);
+            const response = await axios.post(`${backend}/api/register`, formData);
             console.log(response);
             if (response.status == 201) {
                 console.log('User registered successfully');
-                // localStorage.setItem('token', response.data.token);
                 navigate('/login');
             } else {
                 setError('Invalid credentials');
@@ -83,6 +83,17 @@ const Signup = () => {
                             required
                         />
                     </div>
+                    <div>
+                        <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                            Role
+                        </label>
+                        <select name="role" id="role" value={formData.role} onChange={handleChange} className="w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring focus:ring-indigo-200">
+                            <option value="receivers">Receivers</option>
+                            <option value="volunteers">Volunteers</option>
+                            <option value="doctors">Doctors</option>
+                            <option value="blood_donors">Blood Donors</option>
+                        </select>
+                    </div>
 
                     {error && <div className="text-red-500">{error}</div>}
                     <button type="submit" className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-200">
@@ -90,7 +101,7 @@ const Signup = () => {
                     </button>
                     <p className="text-sm text-center text-gray-600">
                         Already have an account?{' '}
-                        <a href="/login" className="text-indigo-600 hover:underline">
+                        <a onClick={() => navigate('/login')} className="text-indigo-600 hover:underline cursor-pointer">
                             Log in
                         </a>
                     </p>

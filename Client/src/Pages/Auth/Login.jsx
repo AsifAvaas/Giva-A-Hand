@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/auth.css';
 function Login() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('');
     const [error, setError] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
@@ -13,19 +13,21 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', { email, password, role: 'users' });
+            const response = await axios.post(`${backend}/api/login`, { email, password });
             if (response.status === 201) {
                 setMsg('Login successful');
+                console.log(response.data);
                 localStorage.setItem('token', response.data.token);
                 localStorage.setItem('userID', response.data.userId);
                 localStorage.setItem('role', response.data.role);
+                localStorage.setItem('helperId', response.data.helperId);
 
                 navigate('/');
             } else {
                 setError('Invalid credentials');
             }
 
-            console.log(role);
+            console.log(response.data.role);
             console.log('Email:', email);
             console.log('Password:', password);
         } catch (error) {
@@ -55,7 +57,7 @@ function Login() {
                     </button>
                     <p className="text-sm text-center text-gray-600">
                         Don't have an account?{' '}
-                        <a href="/signup" className="text-indigo-600 hover:underline">
+                        <a onClick={() => navigate('/signup')} className="text-indigo-600 hover:underline cursor-pointer">
                             Sign Up
                         </a>
                     </p>

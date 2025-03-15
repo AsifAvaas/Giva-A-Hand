@@ -2,72 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
-use Laravel\Sanctum\PersonalAccessToken;
-use Illuminate\Support\Facades\Hash;
+use App\Services\UserService;
 
 class UserController extends Controller
 {
-    public function getProfile(Request $request)
+    protected $userService;
+
+    public function __construct(UserService $userService)
     {
-
-        $userId = $request->input('user_Id');
-
-
-        $user = User::find($userId);
-
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not found'], 404);
-        }
-
-        return response()->json([
-            'success' => true,
-
-            'user' => $user,
-
-        ], 200);
+        $this->userService = $userService;
     }
 
-
-    public function updateProfile(Request $request)
+    public function getAllUsers()
     {
-        $userId = $request->input('user_Id'); // Ensure correct key case
-        $user = User::find($userId);
+        $result = $this->userService->getAllUsers();
 
-
-        if (!$user) {
-            return response()->json(['success' => false, 'message' => 'User not found'], 404);
+        if (isset($result['error'])) {
+            return response()->json(['success' => false, 'message' => $result['message'], 'error' => $result['error']], 500);
         }
-
-        // Validation
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'email' => "nullable|email|unique:users,email,{$user->user_id},user_id", // Fixed unique rule
-            'password' => 'nullable|min:8|same:confirm_password', // Removed required_with
-            'confirm_password' => 'nullable|min:8',
-            'phone' => 'nullable|string|max:255'
-        ]);
-
-        // Update fields
-        $user->update([
-            'name' => $request->input('name', $user->name),
-            'email' => $request->input('email', $user->email),
-            'password' => $request->filled('password') ? Hash::make($request->password) : $user->password,
-            'phone' => $request->input('phone', $user->phone),
-            'address' => $request->input('address', $user->address),
-            'profile_pic' => $request->input('profile_pic', $user->profile_pic),
-            'role' => $request->input('role', $user->role),
-        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Profile updated successfully',
-            'user' => $user,
+            'volunteers' => $result['volunteers'],
+            'doctors' => $result['doctors'],
+            'bloodDonors' => $result['bloodDonors']
         ], 201);
     }
 
+    public function getVolunteers()
+    {
+        $result = $this->userService->getVolunteers();
 
+        if (isset($result['error'])) {
+            return response()->json(['success' => false, 'message' => $result['message'], 'error' => $result['error']], 500);
+        }
 
+        return response()->json(['success' => true, 'volunteers' => $result['volunteers']], 201);
+    }
 
+    public function getDoctors()
+    {
+        $result = $this->userService->getDoctors();
+
+        if (isset($result['error'])) {
+            return response()->json(['success' => false, 'message' => $result['message'], 'error' => $result['error']], 500);
+        }
+
+        return response()->json(['success' => true, 'doctors' => $result['doctors']], 201);
+    }
+
+    public function getDonors()
+    {
+        $result = $this->userService->getDonors();
+
+        if (isset($result['error'])) {
+            return response()->json(['success' => false, 'message' => $result['message'], 'error' => $result['error']], 500);
+        }
+
+        return response()->json(['success' => true, 'bloodDonors' => $result['bloodDonors']], 201);
+    }
 }
