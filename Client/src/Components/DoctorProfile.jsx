@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 
 function DoctorProfile() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const userId = localStorage.getItem('userID');
     const [doctor, setDoctor] = useState({
         specialization: '',
@@ -19,7 +20,7 @@ function DoctorProfile() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/api/doctor/profile', { user_Id: userId });
+            const response = await axios.post(`${backend}/api/doctor/profile`, { user_Id: userId });
             if (response.status === 201) {
                 const data = response.data.doctor[0];
                 setDoctor(data);
@@ -45,12 +46,13 @@ function DoctorProfile() {
         console.log('Updated Profile:', userId);
         console.log('Updated Profile:', form);
         try {
-            const response = await axios.put('http://localhost:8000/api/doctor/profile', { user_Id: form.user_Id, specialization: form.specialization, freeTime: form.freeTime, chamber_Location: form.chamber_Location });
+            const response = await axios.put(`${backend}/api/doctor/profile`, { user_Id: form.user_Id, specialization: form.specialization, freeTime: form.freeTime, chamber_Location: form.chamber_Location });
             if (response.status === 201) {
                 console.log('Profile updated successfully');
                 fetchData();
             } else {
                 console.log('somethiung went wrong');
+                console.log(response.data);
             }
         } catch (error) {
             console.log(error);
@@ -60,7 +62,7 @@ function DoctorProfile() {
     return (
         <div className="container mx-auto p-4">
             <div className="bg-white p-6 rounded-lg">
-                <h1 className="text-2xl">Blood Donor Information</h1>
+                <h1 className="text-2xl">Doctor Information</h1>
                 <div className="text-lg mb-2">
                     <span className="font-semibold">Field of specialization:</span>
                     {isEditing ? <input type="text" name="specialization" value={form.specialization || ''} onChange={handleChange} className="ml-2 p-2 border rounded" /> : <span> {doctor.specialization}</span>}

@@ -1,91 +1,152 @@
-# Give a Hand
+# Give A Hand 
 
-![Untitled design](https://github.com/user-attachments/assets/06956631-0594-4b94-b5b2-6b10aadd9f96)
+## Overview
 
-## Team Members:
+**Give A Hand** is a web application designed to connect blood recipients with donors, doctors, and volunteers. The application provides a platform where recipients can browse and contact helpers, submit help requests, and engage in chat. Admins can post notices visible to all users, and the system features notifications for important updates.
 
-| Roll Number | Name          | Email                    | Role               |
-| ----------- | ------------- | ------------------------ | ------------------ |
-| 20220104005 | Asif A Khuda  | asif13.aak@gmail.com     | Project Manager    |
-| 20220104002 | Nadia Yeasmin | nadiasupti420@gmail.com  | Frontend Developer |
-| 20220104012 | Sanjida Amin  | sanjidasunny25@gmail.com | Backend Developer  |
+The application is built with:
+- **Backend**: Laravel (PHP)
+- **Frontend**: React (Vite)
+- **Database**: MySQL
 
-## Project Overview:
+### Features:
+- **User Types**:
+  - **Receivers**: Can browse all helpers, submit help requests, and contact helpers.
+  - **Blood Donors, Doctors, Volunteers**: Can see help requests and accept them, as well as chat with the receivers.
+  - **Admin**: Can post various notices visible to all users.
+- **Chat System**: Blood donors, doctors, and volunteers can chat with the receivers they are helping.
+- **Profile Pages**: Users can update their profiles.
+- **Notification System**: Users can receive notifications for relevant updates.
 
-### Project Title:
+## Installation
 
-**Give a Hand**
+### Prerequisites
 
-### Objective:
+Make sure you have the following installed on your machine:
+- PHP >= 7.3
+- Composer
+- Node.js >= 16.x
+- NPM or Yarn
+- MySQL
 
-Give a Hand aims to connect donors, volunteers, doctors, and blood donors with those in need. It provides a platform for financial donations, medical volunteering, service volunteering, and blood donation, streamlining the process of giving and receiving aid.
+### Backend Installation
 
-### Target Audience:
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/AsifAvaas/Giva-A-Hand.git
+    cd Giva-A-Hand
+    ```
 
-- Donors (Individuals or Organizations) willing to contribute financially.
-- Doctors interested in volunteering their time.
-- General volunteers offering services.
-- Blood donors and recipients.
-- Needy individuals and organizations seeking assistance.
+2. **Install PHP dependencies**:
+    ```bash
+    composer install
+    ```
 
-### Tech Stack:
+3. **Set up your `.env` file**:
+    Copy the `.env.example` to `.env`:
+    ```bash
+    cp .env.example .env
+    ```
 
-- **Backend:** Laravel.
-- **Frontend:** React.
-- **Rendering Method:** Client-Side Rendering (CSR).
+    Then, configure your database credentials and other environment variables.
 
-### UI Design:
+4. **Generate the application key**:
+    ```bash
+    php artisan key:generate
+    ```
 
-Mock UI designs have been created using Figma.
-[View Mock UI Design](https://www.figma.com/design/s8b9ZVAG1ZNGe7Qf9DP8cs/test?node-id=4-2&p=f&t=EwJbM7OdXp8FdW2T-0)
+5. **Run migrations**:
+    ```bash
+    php artisan migrate
+    ```
 
-## Project Features:
+6. **Start the Laravel server**:
+    ```bash
+    php artisan serve
+    ```
 
-1. **Donor Management:**
-   - Allow donors to donate funds.
-   - Record and manage large donations for allocation to those in need.
-2. **Medical Volunteering:**
-   - Doctors can set availability for volunteering weekly.
-   - Users can contact available doctors for medical assistance.
-3. **Service Volunteering:**
-   - Volunteers can register their availability and skills.
-   - Organizations or individuals can contact them through the app.
-4. **Blood Donation Platform:**
-   - Connect blood donors and recipients.
-   - Record and track blood donations and requests.
-5. **User Authentication:**
-   - Secure registration and login functionality.
-6. **CRUD Operations:**
-   - Manage donations, volunteer schedules, blood donor records, and user profiles.
-7. **API Endpoints:**
-   - `GET /donations`
-   - `POST /donations`
-   - `GET /volunteers`
-   - `POST /volunteers`
-   - `GET /blood-donors`
-   - `POST /blood-donors`
+The backend should now be running on `http://localhost:8000`.
 
-## Milestones:
+### Frontend Installation
 
-### Milestone 1: Initial Setup
+1. **Navigate to the `client` directory**:
+    ```bash
+    cd client
+    ```
 
-- Project initialization with Laravel backend and React frontend.
-- User authentication implementation.
-- Database setup for donations, volunteers, and blood donors.
+2. **Install JavaScript dependencies**:
+    ```bash
+    npm install
+    ```
 
-### Milestone 2: Core Features Development
+3. **Configure the API base URL**:
+   Ensure the frontend is set to connect to the correct backend URL. You may want to set the backend URL in an environment variable or directly within the frontend application.
 
-- Develop donor management features.
-- Implement medical volunteering functionality.
-- Add CRUD operations for volunteers and donor management.
+4. **Start the development server**:
+    ```bash
+    npm run dev
+    ```
 
-### Milestone 3: Final Touches and Deployment
+The frontend should now be running on `http://localhost:5173`.
 
-- Integrate blood donation platform.
-- Test all features thoroughly.
-- Deploy the application on a hosting platform.
-- Ensure proper documentation and a user-friendly interface.
+### Connecting Backend and Frontend
 
----
+Make sure that the frontend is properly connected to the backend by configuring API routes to communicate with the Laravel server. The frontend (React) should be able to send requests to the backend (Laravel) and handle authentication, chat, and notifications.
 
-This README file will be updated as the project progresses. Stay tuned!
+### Database Setup
+
+1. **Create a new MySQL database**:
+   Use MySQL workbench or command-line tools to create a new database (e.g., `give_a_hand`).
+
+2. **Update `.env` for database**:
+   Set the correct database connection settings in the `.env` file in the root directory of the Laravel application:
+   ```dotenv
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=give_a_hand
+   DB_USERNAME=root
+   DB_PASSWORD=your-password
+
+
+### Run database migrations
+
+3. **Run database migrations**:
+    ```bash
+    php artisan migrate
+    ```
+
+4. **Seed the database (optional)**:
+    If you want to populate the database with sample data:
+    ```bash
+    php artisan db:seed
+    ```
+
+## Usage
+
+1. **Register and log in** as a receiver, donor, doctor, or volunteer.
+2. **Submit help requests** (if you are a receiver).
+3. **Browse and accept help requests** (if you are a donor, doctor, or volunteer).
+4. **Chat with users** to coordinate assistance.
+5. **Admins can post notices** visible to all users.
+6. **Receive notifications** for important updates.
+
+## Contributing
+
+If you wish to contribute:
+- Fork the repository
+- Create a new branch for your feature
+- Submit a pull request
+
+
+## Contributors
+
+| Name            |          GitHub Profile                        |
+|-----------------|------------------------------------------------|
+| Asif A Khuda    |     [GitHub](https://github.com/AsifAvaas)     |
+| Sanjida Amin    |     [GitHub](https://github.com/nadiasupti)    |
+| Nadia Yeasmin   |     [GitHub](https://github.com/sanjidasunny)  |
+
+
+
+   

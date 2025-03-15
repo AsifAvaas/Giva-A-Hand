@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Request extends Model
 {
     use HasFactory;
+
     protected $table = 'requests';
     protected $primaryKey = "request_id";
-    public $incrementing = false;
-    protected $keyType = "int";
+    public $incrementing = true; // ✅ Enable auto-increment
+    protected $keyType = "int"; // ✅ Ensure it's an integer
+
     protected $fillable = [
         'seeker_id',
         'helper_id',
@@ -20,26 +22,12 @@ class Request extends Model
         'status'
     ];
 
-    // Relationship with User (Seeker)
+    // Relationships
     public function seeker()
     {
         return $this->belongsTo(User::class, 'seeker_id', 'user_id');
     }
 
-    // Polymorphic Relationship: Helper (Volunteer, Doctor, Blood Donor)
-    // public function helper()
-    // {
-    //     switch ($this->helper_type) {
-    //         case 'volunteers':
-    //             return $this->belongsTo(Volunteer::class, 'helper_id', 'volunteer_id');
-    //         case 'doctors':
-    //             return $this->belongsTo(Doctor::class, 'helper_id', 'doctor_id');
-    //         case 'blood_donors':
-    //             return $this->belongsTo(BloodDonor::class, 'helper_id', 'blood_donor_id');
-    //         default:
-    //             return null;
-    //     }
-    // }
     public function volunteer()
     {
         return $this->belongsTo(Volunteer::class, 'helper_id', 'volunteer_id');
@@ -54,16 +42,4 @@ class Request extends Model
     {
         return $this->belongsTo(BloodDonor::class, 'helper_id', 'blood_donor_id');
     }
-    protected static function boot()
-    {
-        parent::boot();
-        static::creating(function ($request) {
-            do {
-                $randomId = mt_rand(1000000000, 9999999999); // Generate 10-digit random ID
-            } while (self::where("request_id", $randomId)->exists()); // Ensure uniqueness
-
-            $request->request_id = $randomId; // Assign random ID
-        });
-    }
-
 }

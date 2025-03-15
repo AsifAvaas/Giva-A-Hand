@@ -14,7 +14,7 @@ class CreateRequestsTable extends Migration
     public function up()
     {
         Schema::create('requests', function (Blueprint $table) {
-            $table->bigInteger('request_id')->unique(); // Custom 10-digit ID
+            $table->id('request_id');
             $table->bigInteger('seeker_id')->unsigned();
             $table->bigInteger('helper_id')->unsigned();
             $table->string('helper_type'); // Stores 'volunteers', 'doctors', or 'blood_donors'

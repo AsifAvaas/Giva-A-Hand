@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/auth.css';
 function Login() {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -12,7 +13,7 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8000/api/login', { email, password });
+            const response = await axios.post(`${backend}/api/login`, { email, password });
             if (response.status === 201) {
                 setMsg('Login successful');
                 console.log(response.data);
@@ -56,7 +57,7 @@ function Login() {
                     </button>
                     <p className="text-sm text-center text-gray-600">
                         Don't have an account?{' '}
-                        <a href="/signup" className="text-indigo-600 hover:underline">
+                        <a onClick={() => navigate('/signup')} className="text-indigo-600 hover:underline cursor-pointer">
                             Sign Up
                         </a>
                     </p>

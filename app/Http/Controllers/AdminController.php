@@ -3,66 +3,47 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use App\Models\Admin;
-use Illuminate\Support\Facades\Auth;
+use App\Services\AdminService;
 
 class AdminController extends Controller
 {
+    protected $adminService;
+
+    public function __construct(AdminService $adminService)
+    {
+        $this->adminService = $adminService;
+    }
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:admins',
-            'password' => 'required|string|min:6',
-        ]);
+        $result = $this->adminService->register($request->all());
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+        if (isset($result['error'])) {
+            return response()->json(['error' => $result['error']], 400);
         }
-
-
-        $admin = Admin::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Admin registered successfully',
-            'adminId' => $admin->admin_id,
+
+            'message' => $result['message'],
+            'adminId' => $result['adminId'],
         ], 201);
     }
 
-
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string|min:6',
-        ]);
+        $result = $this->adminService->login($request->all());
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+        if (isset($result['error'])) {
+            return response()->json(['error' => $result['error']], 401);
         }
-
-        $admin = Admin::where('email', $request->email)->first();
-
-        if (!$admin || !Hash::check($request->password, $admin->password)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
-        }
-
-
-        $token = $admin->createToken('authToken')->plainTextToken;
 
         return response()->json([
             'success' => true,
-            'message' => 'Login successful',
-            'adminId' => $admin->admin_id,
-            'token' => $token,
+            'role' => 'admin',
+            'message' => $result['message'],
+            'adminId' => $result['adminId'],
+            'token' => $result['token'],
         ], 201);
     }
 }
