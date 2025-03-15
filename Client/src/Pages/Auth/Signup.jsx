@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../styles/auth.css';
 const Signup = () => {
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -29,7 +30,7 @@ const Signup = () => {
             return;
         }
         try {
-            const response = await axios.post('http://localhost:8000/api/register', formData);
+            const response = await axios.post(`${backend}/api/register`, formData);
             console.log(response);
             if (response.status == 201) {
                 console.log('User registered successfully');
@@ -100,7 +101,7 @@ const Signup = () => {
                     </button>
                     <p className="text-sm text-center text-gray-600">
                         Already have an account?{' '}
-                        <a href="/login" className="text-indigo-600 hover:underline">
+                        <a onClick={() => navigate('/login')} className="text-indigo-600 hover:underline cursor-pointer">
                             Log in
                         </a>
                     </p>

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 function NewNotice() {
     const adminId = localStorage.getItem('adminId');
+    const backend = import.meta.env.VITE_BACKEND_PORT;
     const navigate = useNavigate();
     const [form, setForm] = useState({
         admin_id: adminId,
@@ -21,7 +22,7 @@ function NewNotice() {
         e.preventDefault();
         console.log('Submitted Notice:', form);
         try {
-            const response = await axios.post('http://localhost:8000/api/notice', form);
+            const response = await axios.post(`${backend}/api/notice`, form);
             if (response.status === 201) {
                 console.log('Notice posted successfully');
                 navigate('/');

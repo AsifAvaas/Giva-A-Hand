@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../Components/Navbar';
 
 function NoticeBoard() {
+    const adminId = localStorage.getItem('adminId');
     const { id } = useParams();
     const [notice, setNotice] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -11,7 +12,7 @@ function NoticeBoard() {
 
     const fetchNotice = async () => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/notice/${id}`);
+            const response = await axios.get(`${backend}/api/notice/${id}`);
 
             if (response.status === 201) {
                 setNotice(response.data.data);
